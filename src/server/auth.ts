@@ -9,6 +9,7 @@ import Google from "next-auth/providers/google";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
+import { type UserRole } from "~/utils/types";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -21,14 +22,14 @@ declare module "next-auth" {
     user: DefaultSession["user"] & {
       id: string;
       // ...other properties
-      // role: UserRole;
+      role?: UserRole;
     };
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    // ...other properties
+    role?: UserRole;
+  }
 }
 
 /**
@@ -38,7 +39,7 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   pages: {
-    newUser: "/register"
+    newUser: "/register",
   },
   callbacks: {
     session: ({ session, user }) => ({
@@ -46,9 +47,9 @@ export const authOptions: NextAuthOptions = {
       user: {
         ...session.user,
         id: user.id,
+        role: user.role,
       },
     }),
-
   },
   adapter: PrismaAdapter(db),
   providers: [

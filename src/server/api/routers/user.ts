@@ -7,14 +7,9 @@ export const userRouter = createTRPCRouter({
     .input(
       z.object({
         description: z.string(),
-        role: z.enum(["student", "admin", "company"]),
-        university: z.string().optional(),
-        faculty: z.string().optional(),
-        dob: z.date().optional(),
-        domain: z.string().optional(),
-        country: z.string().optional(),
-        employees: z.number().optional(),
-        headquarters: z.string().optional(),
+        university: z.string(),
+        faculty: z.string(),
+        dob: z.date(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -22,7 +17,28 @@ export const userRouter = createTRPCRouter({
         where: {
           id: ctx.session.user.id,
         },
-        data: input,
+        data: { ...input, role: "student" },
+      });
+    }),
+  getCurrent: protectedProcedure.query(async ({ ctx }) => {
+    const id = ctx.session.user.id;
+    return ctx.db.user.findUnique({ where: { id } });
+  }),
+  registerAsEmployer: protectedProcedure
+    .input(
+      z.object({
+        companyId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id } = ctx.session.user;
+      const { companyId: company_id } = input;
+      return await ctx.db.user.update({
+        where: { id },
+        data: {
+          company_id,
+          role: "employer",
+        },
       });
     }),
 });
