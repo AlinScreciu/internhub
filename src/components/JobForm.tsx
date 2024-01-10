@@ -1,23 +1,31 @@
 import React from "react";
-import { type SubmitHandler, useForm, useWatch } from "react-hook-form";
+import { type SubmitHandler, useForm } from "react-hook-form";
 import Input from "./Input";
 import TextareaInput from "./TextareaInput";
 import SelectInput from "./SelectInput";
 import ErrorSpan from "./ErrorSpan";
+import { api } from "~/utils/api";
 export interface UserRegistrationFormData {
+  position: string;
   location: string; // city
   workingPlace: string; // on-site, hybrid, remote
   fullTime: boolean; // if false => part time
   description: string;
   paid: boolean;
-  payRangeStart?: number;
-  payRangeEnd?: number;
   openPositions: number;
   deadline: Date;
-  hireRate?: number;
+  payRangeEnd?: number | null;
+  payRangeStart?: number | null;
+  hireRate?: number | null;
 }
 
 const JobForm: React.FC = () => {
+  const { internship } = api.useUtils();
+  const postJobMutation = api.internship.post.useMutation({
+    onSettled: async () => {
+      await internship.getAllFromCompany.invalidate();
+    },
+  });
   const {
     handleSubmit,
     register,
@@ -28,11 +36,13 @@ const JobForm: React.FC = () => {
     mode: "onChange",
     defaultValues: {
       paid: false,
+      fullTime: true,
+      payRangeEnd: null,
+      payRangeStart: null,
+      hireRate: null,
     },
   });
-  const onSubmit: SubmitHandler<UserRegistrationFormData> = (data) => {
-    console.log(data);
-  };
+
   const required = {
     value: true,
     message: "Required",
@@ -41,6 +51,10 @@ const JobForm: React.FC = () => {
   const payStart = watch("payRangeStart");
   const payEnd = watch("payRangeEnd");
 
+  const onSubmit: SubmitHandler<UserRegistrationFormData> = (data) => {
+    console.log(data);
+    postJobMutation.mutate(data);
+  };
   return (
     <div className="flex min-h-screen w-max items-center justify-center bg-gray-100">
       <div className="w-full max-w-screen-lg rounded-md bg-white px-6 py-4 shadow-md">
@@ -51,10 +65,35 @@ const JobForm: React.FC = () => {
           <div className="mb-4 grid grid-cols-2 gap-4">
             <div>
               <Input
+                label="Position"
+                type="text"
+                {...register("position", { required })}
+              />
+              {errors.position && (
+                <ErrorSpan message={errors.position.message} />
+              )}
+            </div>
+            <div>
+              <Input
+                label="Full Time"
+                type="checkbox"
+                {...register("fullTime", { required })}
+              />
+              {errors.fullTime && (
+                <ErrorSpan message={errors.fullTime.message} />
+              )}
+            </div>
+          </div>
+          <div className="mb-4 grid grid-cols-2 gap-4">
+            <div>
+              <Input
                 type="text"
                 label="Location"
                 {...register("location", { required })}
               />
+              {errors.location && (
+                <ErrorSpan message={errors.location.message} />
+              )}
             </div>
 
             <div>
@@ -84,7 +123,9 @@ const JobForm: React.FC = () => {
               label="Description"
               {...register("description", { required })}
             />
-            {errors.description && <ErrorSpan {...errors.description} />}
+            {errors.description && (
+              <ErrorSpan message={errors.description.message} />
+            )}
           </div>
 
           <div className="mb-4 grid grid-cols-2 gap-4">
@@ -92,13 +133,25 @@ const JobForm: React.FC = () => {
               <Input
                 label="Deadline"
                 type="date"
-                {...register("deadline", { required, valueAsDate: true })}
+                {...register("deadline", {
+                  required,
+                  valueAsDate: true,
+                  validate: (date) => {
+                    if (!date) return "Invalid";
+                    const todaysDate = new Date();
+                    return (
+                      date >= todaysDate || "Deadline has to be in the future"
+                    );
+                  },
+                })}
               />
-              {errors.deadline && <ErrorSpan {...errors.deadline} />}
+              {errors.deadline && (
+                <ErrorSpan message={errors.deadline.message} />
+              )}
             </div>
             <div className="w-4">
               <Input label="Paid" type="checkbox" {...register("paid")} />
-              {errors.paid && <ErrorSpan {...errors.paid} />}
+              {errors.paid && <ErrorSpan message={errors.paid.message} />}
             </div>
           </div>
           <div className="mb-4 grid grid-cols-2 gap-4">
@@ -107,24 +160,28 @@ const JobForm: React.FC = () => {
                 label="Open positions"
                 type="number"
                 {...register("openPositions", {
+                  required,
                   min: { value: 1, message: "Cannot be less than 0" },
                   valueAsNumber: true,
                 })}
               />
-              {errors.openPositions && <ErrorSpan {...errors.openPositions} />}
+              {errors.openPositions && (
+                <ErrorSpan message={errors.openPositions.message} />
+              )}
             </div>
             <div>
               <Input
                 label="Hire rate after internship"
                 type="number"
                 {...register("hireRate", {
-                  required,
                   valueAsNumber: true,
                   min: { value: 1, message: "Cannot be less than 0" },
                   max: { value: 100, message: "Cannot be more than 100" },
                 })}
               />
-              {errors.hireRate && <ErrorSpan {...errors.hireRate} />}
+              {errors.hireRate && (
+                <ErrorSpan message={errors.hireRate.message} />
+              )}
             </div>
             <span>(in euro)</span>
             {payStart && payEnd && payStart > payEnd && (
@@ -140,11 +197,12 @@ const JobForm: React.FC = () => {
                   min="1"
                   {...register("payRangeStart", {
                     required,
+                    valueAsNumber: true,
                     min: { value: 1, message: "Cannot be less than 0 if paid" },
                   })}
                 />
                 {errors.payRangeStart && (
-                  <ErrorSpan {...errors.payRangeStart} />
+                  <ErrorSpan message={errors.payRangeStart.message} />
                 )}
               </div>
               <div>
@@ -154,10 +212,14 @@ const JobForm: React.FC = () => {
                   min="1"
                   {...register("payRangeEnd", {
                     required,
+                    valueAsNumber: true,
+
                     min: { value: 1, message: "Cannot be less than 0 if paid" },
                   })}
                 />
-                {errors.payRangeEnd && <ErrorSpan {...errors.payRangeEnd} />}
+                {errors.payRangeEnd && (
+                  <ErrorSpan message={errors.payRangeEnd.message} />
+                )}
               </div>
               <span>(in euro)</span>
               {payStart && payEnd && payStart > payEnd && (
