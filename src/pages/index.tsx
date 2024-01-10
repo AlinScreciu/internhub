@@ -1,5 +1,5 @@
 import { type NextPage } from "next";
-import { useSession } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import React from "react";
 import EmployerHome from "~/components/EmployerHome";
 import Header from "~/components/Header";
@@ -10,7 +10,8 @@ const Home: NextPage = () => {
     return <div>Loading</div>;
   }
   if (!session && status === "unauthenticated") {
-    return <div>You must be logged in</div>;
+    return( <div>  <button onClick={() => signIn("google")}>Sign in with Google</button>
+    </div>);
   }
   const isEmployer = session?.user.role === "employer";
   return (
