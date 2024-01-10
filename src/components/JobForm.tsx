@@ -27,8 +27,7 @@ const JobForm: React.FC = () => {
   } = useForm<UserRegistrationFormData>({
     mode: "onChange",
     defaultValues: {
-      payRangeEnd: 1,
-      payRangeStart: 1,
+      paid: false,
     },
   });
   const onSubmit: SubmitHandler<UserRegistrationFormData> = (data) => {
@@ -98,12 +97,39 @@ const JobForm: React.FC = () => {
               {errors.deadline && <ErrorSpan {...errors.deadline} />}
             </div>
             <div className="w-4">
-              <Input
-                label="Paid"
-                type="checkbox"
-                {...register("paid", { required })}
-              />
+              <Input label="Paid" type="checkbox" {...register("paid")} />
+              {errors.paid && <ErrorSpan {...errors.paid} />}
             </div>
+          </div>
+          <div className="mb-4 grid grid-cols-2 gap-4">
+            <div>
+              <Input
+                label="Open positions"
+                type="number"
+                {...register("openPositions", {
+                  min: { value: 1, message: "Cannot be less than 0" },
+                  valueAsNumber: true,
+                })}
+              />
+              {errors.openPositions && <ErrorSpan {...errors.openPositions} />}
+            </div>
+            <div>
+              <Input
+                label="Hire rate after internship"
+                type="number"
+                {...register("hireRate", {
+                  required,
+                  valueAsNumber: true,
+                  min: { value: 1, message: "Cannot be less than 0" },
+                  max: { value: 100, message: "Cannot be more than 100" },
+                })}
+              />
+              {errors.hireRate && <ErrorSpan {...errors.hireRate} />}
+            </div>
+            <span>(in euro)</span>
+            {payStart && payEnd && payStart > payEnd && (
+              <ErrorSpan message="Pay start cannot be more than pay end" />
+            )}
           </div>
           {paid && (
             <div className="mb-4 grid grid-cols-2 gap-4">
