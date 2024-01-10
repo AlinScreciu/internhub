@@ -89,6 +89,7 @@ model VerificationToken {
 model Internship {
     id            String   @id @default(cuid())
     companyId     String
+    position      String
     location      String
     workingPlace  String
     fullTime      Boolean
