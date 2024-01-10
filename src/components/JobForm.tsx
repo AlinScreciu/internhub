@@ -1,5 +1,5 @@
 import React from "react";
-import { type SubmitHandler, useForm } from "react-hook-form";
+import { type SubmitHandler, useForm, useWatch } from "react-hook-form";
 import Input from "./Input";
 import TextareaInput from "./TextareaInput";
 import SelectInput from "./SelectInput";
@@ -22,8 +22,15 @@ const JobForm: React.FC = () => {
     handleSubmit,
     register,
     watch,
+
     formState: { errors },
-  } = useForm<UserRegistrationFormData>({});
+  } = useForm<UserRegistrationFormData>({
+    mode: "onChange",
+    defaultValues: {
+      payRangeEnd: 1,
+      payRangeStart: 1,
+    },
+  });
   const onSubmit: SubmitHandler<UserRegistrationFormData> = (data) => {
     console.log(data);
   };
@@ -32,6 +39,9 @@ const JobForm: React.FC = () => {
     message: "Required",
   };
   const paid = watch("paid");
+  const payStart = watch("payRangeStart");
+  const payEnd = watch("payRangeEnd");
+
   return (
     <div className="flex min-h-screen w-max items-center justify-center bg-gray-100">
       <div className="w-full max-w-screen-lg rounded-md bg-white px-6 py-4 shadow-md">
@@ -96,13 +106,37 @@ const JobForm: React.FC = () => {
             </div>
           </div>
           {paid && (
-            <div className="mb-4 grid grid-cols-1 gap-4">
+            <div className="mb-4 grid grid-cols-2 gap-4">
               <div>
-                {/* <Input label="Pay range start" type="number" {...register("payRangeStart", {
-                    required, 
-                    deps
-                })} /> */}
+                <Input
+                  label="Pay range start"
+                  type="number"
+                  min="1"
+                  {...register("payRangeStart", {
+                    required,
+                    min: { value: 1, message: "Cannot be less than 0 if paid" },
+                  })}
+                />
+                {errors.payRangeStart && (
+                  <ErrorSpan {...errors.payRangeStart} />
+                )}
               </div>
+              <div>
+                <Input
+                  label="Pay range end"
+                  type="number"
+                  min="1"
+                  {...register("payRangeEnd", {
+                    required,
+                    min: { value: 1, message: "Cannot be less than 0 if paid" },
+                  })}
+                />
+                {errors.payRangeEnd && <ErrorSpan {...errors.payRangeEnd} />}
+              </div>
+              <span>(in euro)</span>
+              {payStart && payEnd && payStart > payEnd && (
+                <ErrorSpan message="Pay start cannot be more than pay end" />
+              )}
             </div>
           )}
 

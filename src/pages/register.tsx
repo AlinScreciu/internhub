@@ -17,7 +17,7 @@ const Register: React.FC = () => {
   const router = useRouter();
   const userRegisterMutation = api.user.register.useMutation({
     onSuccess: async () => {
-      await router.push("/home");
+      await router.push("/");
     },
     onError(error) {
       setError(error.message);
@@ -25,7 +25,7 @@ const Register: React.FC = () => {
   });
   const employerRegistrationMutation = api.user.registerAsEmployer.useMutation({
     onSuccess: async () => {
-      await router.push("/home");
+      await router.push("/");
     },
   });
   const { data: session, status } = useSession();
