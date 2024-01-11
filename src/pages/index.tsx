@@ -9,14 +9,18 @@ const Home: NextPage = () => {
   if (status === "loading") {
     return <div>Loading</div>;
   }
-  if (!session && status === "unauthenticated") {
+  
+  if (status === "unauthenticated") {
     return( <div>  <button onClick={() => signIn("google")}>Sign in with Google</button>
     </div>);
+  }
+  if(!session){
+    return <div>No session found</div>
   }
   const isEmployer = session?.user.role === "employer";
   return (
     <div className="h-screen w-screen">
-      <Header search />
+      <Header search id={session?.user.id}/>
       {isEmployer && <EmployerHome />}
     </div>
   );

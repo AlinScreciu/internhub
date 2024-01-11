@@ -1,4 +1,6 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { prisma } from "../../db"
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
@@ -19,6 +21,15 @@ export const userRouter = createTRPCRouter({
         },
         data: { ...input, role: "student" },
       });
+    }),
+    getUserById: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      return ctx.db.user.findUnique({ where: input });
     }),
   getCurrent: protectedProcedure.query(async ({ ctx }) => {
     const id = ctx.session.user.id;
