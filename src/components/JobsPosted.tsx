@@ -4,6 +4,7 @@ import { FiLock } from "react-icons/fi";
 import { api } from "~/utils/api";
 import ErrorSpan from "./ErrorSpan";
 import Link from "next/link";
+import { useQueryStore } from "~/stores/query.store";
 
 type InternshipWithCompany = Prisma.InternshipGetPayload<{
   include: {
@@ -38,8 +39,10 @@ const InternshipCard: React.FC<InternshipCardProps> = ({ internship }) => {
     </Link>
   );
 };
-const InternshipList: React.FC = () => {
-  const jobsQuery = api.internship.getAllFromCompany.useQuery();
+
+const JobsPosted = () => {
+  const query = useQueryStore((store) => store.query);
+  const jobsQuery = api.internship.getAllFromCompany.useQuery({ query });
 
   if (jobsQuery.isLoading) {
     return <>loading</>;
@@ -57,14 +60,6 @@ const InternshipList: React.FC = () => {
       {internships.map((internship) => (
         <InternshipCard key={internship.id} internship={internship} />
       ))}
-    </div>
-  );
-};
-const JobsPosted = () => {
-  return (
-    <div className="h-screen">
-      <div>JobsPosted</div>
-      <InternshipList />
     </div>
   );
 };
