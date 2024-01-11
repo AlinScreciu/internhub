@@ -1,19 +1,34 @@
 import React, { useState } from 'react';
-import { User } from '@prisma/client';
+import { Experience, User } from '@prisma/client';
 import ExperienceForm from './ExperienceForm';
+import { api } from '~/utils/api';
+import ExperienceCard from './ExperienceCard';
 
 interface UserProfileProps {
   user: User;
-  own: boolean; // Indicates if the profile belongs to the current user
+  own: boolean; 
 }
 
 const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
   const [addExperience, setAddExperience] = useState(false);
-  
+  const [deleteExperiences, setDeleteExperiences] = useState<Experience[]>(user);
+
   const toggleExperienceForm = () => {
     setAddExperience(!addExperience);
   };
+  const deleteExperience = api.experience.deleteById.useMutation()
 
+  const handleDeleteExperience = async (id: string) => {
+    try {
+     
+      await deleteExperience.mutateAsync({id: id})
+      setExperiences(experiences.filter(exp => exp.id !== id));
+    } catch (error) {
+      console.error('Failed to delete experience:', error);
+    }
+  };
+
+  const experiences = api.experience.getAll.useQuery()
   return (
     <div className="flex h-screen">
       {/* Profile Sidebar */}
@@ -61,8 +76,15 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
       </div>
       {/* Main Content */}
       <div className="flex-1 p-6 bg-gray-50">
-        {addExperience && <ExperienceForm />}
-        {/* Rest of the content */}
+        {addExperience && <ExperienceForm setAdd={setAddExperience}/>}
+        {!addExperience && 
+        experiences.data?.map((experience)=>
+        {
+          return <ExperienceCard key={experience.id} experience={experience} own= {own}   onDelete={(id) => console.log('Delete experience with id:', id)}
+          />
+        })
+        }
+
       </div>
     </div>
   );

@@ -12,6 +12,15 @@ export const experienceRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return ctx.db.experience.findUnique({ where: input });
     }),
+   deleteById: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.experience.delete({ where: input });
+    }),
   getAll: protectedProcedure.query(async ({ ctx }) => {
     return ctx.db.experience.findMany();
   }),
@@ -35,4 +44,5 @@ export const experienceRouter = createTRPCRouter({
       });
       return experience;
     }),
+
 });

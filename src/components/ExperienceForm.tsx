@@ -13,7 +13,7 @@ interface ExperienceFormData {
   description: string;
 }
 
-const ExperienceForm: React.FC = () => {
+const ExperienceForm: React.FC <{setAdd: React.Dispatch<React.SetStateAction<boolean>>}>= ({setAdd}) => {
   const {
     handleSubmit,
     register,
@@ -21,11 +21,12 @@ const ExperienceForm: React.FC = () => {
   } = useForm<ExperienceFormData>({
     mode: 'onChange',
   });
-  const apicontext = api.useContext();
+  const apicontext = api.useUtils();
 
   const createExperience = api.experience.create.useMutation({
-    async onSettled() {
+    async onSuccess() {
       await apicontext.experience.getAll.invalidate();
+      setAdd(false)
     },
   })
   const onSubmit: SubmitHandler<ExperienceFormData> = async (data) => {
@@ -34,7 +35,7 @@ const ExperienceForm: React.FC = () => {
       data
     )
   };
-
+  
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50">
       <div className="w-full max-w-md rounded-lg bg-white px-8 py-6 shadow-lg">
@@ -43,37 +44,28 @@ const ExperienceForm: React.FC = () => {
           <div className="space-y-4">
             <Input
               label="Company"
-              name="company"
               type="text"
-              onChange={() => {}}
               {...register('company', { required: 'Company is required' })}
             />
             {errors.company && <ErrorSpan message={errors.company.message} />}
-
             <Input
               label="Position"
-              name="position"
               type="text"
-              onChange={() => {}}
               {...register('position', { required: 'Position is required' })}
             />
             {errors.position && <ErrorSpan message={errors.position.message} />}
 
             <Input
               label="Start Date"
-              name="startDate"
               type="date"
-              onChange={() => {}}
-              {...register('startDate', { required: 'Start date is required' })}
+              {...register('startDate', { required: 'Start date is required' , valueAsDate : true})}
             />
             {errors.startDate && <ErrorSpan message={errors.startDate.message} />}
 
             <Input
               label="End Date"
-              name="endDate"
               type="date"
-              onChange={() => {}}
-              {...register('endDate', { required: 'End date is required' })}
+              {...register('endDate', { required: 'End date is required' , valueAsDate : true})}
             />
             {errors.endDate && <ErrorSpan message={errors.endDate.message} />}
 
