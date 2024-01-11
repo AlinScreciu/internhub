@@ -1,3 +1,4 @@
+"use client;";
 // RegistrationForm.tsx
 import React from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
@@ -88,12 +89,12 @@ export const UserRegistrationForm: React.FC<UserRegistrationFormProps> = ({
           </div>
           <div className="mb-4 grid grid-cols-1 gap-4">
             <UploadButton
-              endpoint="imageUploader"
+              endpoint="cv"
               onClientUploadComplete={(res) => {
-                // Do something with the response
-                console.log("Files: ", res);
-                const file = res.pop();
+                console.log("🚀 ~ onClientUploadComplete ~ res:", res);
+                const file = res.at(0);
                 if (!file) return;
+
                 setValue("cv", file.url);
               }}
               onUploadError={(error: Error) => {
