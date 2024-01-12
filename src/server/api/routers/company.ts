@@ -37,7 +37,7 @@ export const companyRouter = createTRPCRouter({
         },
         data: {
           company_id: company.id,
-          role: "company",
+          role: "employer",
         },
       });
       return company;

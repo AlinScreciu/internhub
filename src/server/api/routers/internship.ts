@@ -102,7 +102,12 @@ export const internshipRouter = createTRPCRouter({
   getById: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      return await ctx.db.internship.findFirst({ where: input });
+      return await ctx.db.internship.findFirst({
+        where: input,
+        include: {
+          Company: true,
+        },
+      });
     }),
   getAppliedForCurrentUser: protectedProcedure.query(async ({ ctx }) => {
     const { user } = ctx.session;
