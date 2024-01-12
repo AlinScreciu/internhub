@@ -118,14 +118,14 @@ model Company {
 }
 
 model Review {
-    id          String   @id @default(cuid())
+    id          String    @id @default(cuid())
     companyId   String
     title       String
     position    String
     description String
     stars       Int
     startDate   DateTime
-    endDate     DateTime
-    createdAt   DateTime
-    Company     Company  @relation(fields: [companyId], references: [id])
+    endDate     DateTime?
+    createdAt   DateTime  @default(now())
+    Company     Company   @relation(fields: [companyId], references: [id])
 }
