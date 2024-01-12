@@ -1,21 +1,19 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { prisma } from "../../db"
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const userRouter = createTRPCRouter({
   addCv: protectedProcedure
-  .input(z.object({ cv: z.string() }))
-  .mutation(async ({ ctx, input }) => {
-    return ctx.db.user.update({
-      where: {id : ctx.session.user.id},
-      data: {
-        cv: input.cv
+    .input(z.object({ cv: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.user.update({
+        where: { id: ctx.session.user.id },
+        data: {
+          cv: input.cv,
         },
-      },)
-   
-  }),
+      });
+    }),
   applyToInternship: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -60,7 +58,7 @@ export const userRouter = createTRPCRouter({
         data: { ...input, role: "student" },
       });
     }),
-    getUserById: protectedProcedure
+  getUserById: protectedProcedure
     .input(
       z.object({
         id: z.string(),
