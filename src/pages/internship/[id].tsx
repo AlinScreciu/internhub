@@ -22,7 +22,7 @@ const Internship = () => {
 
   return (
     <div className="h-screen w-screen">
-      <Header search={false} />
+      <Header id={session.user.id} search={false} />
       {session.user.role === "student" && <StudentInternship id={query.id} />}
     </div>
   );
