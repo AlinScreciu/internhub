@@ -11,22 +11,11 @@ interface UserProfileProps {
 
 const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
   const [addExperience, setAddExperience] = useState(false);
-  const [deleteExperiences, setDeleteExperiences] = useState<Experience[]>(user);
 
   const toggleExperienceForm = () => {
     setAddExperience(!addExperience);
   };
-  const deleteExperience = api.experience.deleteById.useMutation()
 
-  const handleDeleteExperience = async (id: string) => {
-    try {
-     
-      await deleteExperience.mutateAsync({id: id})
-      setExperiences(experiences.filter(exp => exp.id !== id));
-    } catch (error) {
-      console.error('Failed to delete experience:', error);
-    }
-  };
 
   const experiences = api.experience.getAll.useQuery()
   return (
