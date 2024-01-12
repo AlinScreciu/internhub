@@ -19,13 +19,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       <div>
         {props.label && (
           <label
-            htmlFor="description"
+            htmlFor={props.name}
             className="mb-2 block font-bold text-gray-700"
           >
             {props.label}
           </label>
         )}
         <input
+          id={props.name}
           className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
           {...props}
           ref={ref}

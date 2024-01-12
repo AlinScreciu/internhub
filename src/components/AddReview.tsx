@@ -2,7 +2,6 @@ import React from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import Input from "./Input";
 import TextareaInput from "./TextareaInput";
-import SelectInput from "./SelectInput";
 import ErrorSpan from "./ErrorSpan";
 import { api } from "~/utils/api";
 import StarsRating from "./StarsRating";
@@ -12,7 +11,7 @@ export interface ReviewFormData {
   description: string;
   stars: number;
   startDate: Date;
-  endDate: Date;
+  endDate?: Date;
 }
 
 const AddReviewForm: React.FC<{
@@ -22,13 +21,25 @@ const AddReviewForm: React.FC<{
   const {
     handleSubmit,
     register,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<ReviewFormData>({
     mode: "onChange",
   });
+  const utils = api.useUtils();
+  const addReviewMutation = api.review.post.useMutation({
+    onSuccess: async () => {
+      await utils.review.getAllReviewFromCompany.invalidate();
+      setShowModal(false);
+    },
+  });
 
+  const start = watch("startDate");
+  const end = watch("endDate");
   const onSubmit: SubmitHandler<ReviewFormData> = (data) => {
     console.log(data);
+    addReviewMutation.mutate({ ...data, companyId });
   };
   return (
     <div className="flex items-center justify-center bg-gray-100">
@@ -63,8 +74,47 @@ const AddReviewForm: React.FC<{
               <ErrorSpan message={errors.description.message} />
             )}
           </div>
-          <div>
-            <StarsRating />
+          <div className="p-4">
+            <StarsRating onChange={(rating) => setValue("stars", rating)} />
+          </div>
+          <div className="grid grid-cols-2 gap-2 p-2">
+            <div>
+              <Input
+                type="date"
+                label="Start"
+                {...register("startDate", {
+                  required: "Required",
+                  valueAsDate: true,
+                  validate: (_) => {
+                    const now = new Date();
+                    if (start >= now)
+                      return "Start date cannot be in the future";
+                    if (end && start >= end)
+                      return "Start date cannot be after end date";
+                  },
+                })}
+              />
+              {errors.startDate && (
+                <ErrorSpan message={errors.startDate.message} />
+              )}
+            </div>
+            <div>
+              <Input
+                type="date"
+                label="End"
+                {...register("endDate", {
+                  valueAsDate: true,
+                  validate: (_) => {
+                    if (!end) return;
+                    const now = new Date();
+                    if (end >= now) return "End date cannot be in the future";
+                    if (start >= end)
+                      return "Start date cannot be after end date";
+                  },
+                })}
+              />
+              {errors.endDate && <ErrorSpan message={errors.endDate.message} />}
+            </div>
           </div>
           <button
             className="focus:shadow-outline rounded bg-gray-800 px-4 py-2 font-bold text-white hover:bg-gray-700 focus:outline-none"

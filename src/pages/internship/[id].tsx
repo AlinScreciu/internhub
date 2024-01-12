@@ -1,10 +1,9 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { ParsedUrlQuery } from "querystring";
+import { type ParsedUrlQuery } from "querystring";
 import React from "react";
 import Header from "~/components/Header";
 import StudentInternship from "~/components/StudentInternship";
-import { api } from "~/utils/api";
 interface ExtendedQuery extends ParsedUrlQuery {
   id: string;
 }
