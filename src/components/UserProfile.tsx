@@ -6,6 +6,7 @@ import ExperienceCard from "./ExperienceCard";
 import { UploadButton } from "~/utils/uploadthing";
 import Image from "next/image";
 import ErrorSpan from "./ErrorSpan";
+import Link from "next/link";
 
 interface UserProfileProps {
   user: User;
@@ -14,7 +15,7 @@ interface UserProfileProps {
 
 const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
   const experiencesQuery = api.experience.getAll.useQuery();
-  const [addExperience, setAddExperience] = useState(false);
+  const [addExperience, setAddExperience] = useState(own ? false : false);
 
   const toggleExperienceForm = () => {
     setAddExperience(!addExperience);
@@ -22,10 +23,11 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
 
   const experiences = experiencesQuery.data;
   useLayoutEffect(() => {
+    if (!own) return;
     if (!experiences || experiences.length === 0) {
       setAddExperience(true);
     }
-  }, [experiences]);
+  }, [experiences, own]);
 
   const uploadCvMutation = api.user.addCv.useMutation();
 
@@ -49,36 +51,38 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
               </div>
             )}
           </div>
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
+          <h1 className="mb-2 text-4xl font-bold text-gray-800">
             {user.name ?? "Anonymous"}
           </h1>
-          <p className="text-sm text-gray-500 mb-1">
+          <p className="mb-1 text-sm text-gray-500">
             {user.university ?? "No University"}
           </p>
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="mb-4 text-sm text-gray-500">
             {user.faculty ?? "No Faculty"}
           </p>
-          <p className="text-center text-gray-600 mb-4">
+          <p className="mb-4 text-center text-gray-600">
             {user.description ?? "No description provided."}
           </p>
           {user.cv && (
-            <a
+            <Link
               href={user.cv}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block rounded-lg bg-green-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-green-700 mb-4"
+              className="mb-4 inline-block rounded-lg bg-green-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-green-700"
             >
               View My CV
-            </a>
+            </Link>
           )}
-          <button 
-            onClick={toggleExperienceForm}
-            className="bg-blue-500 hover:bg-blue-700 text-white text-sm font-medium px-6 py-3 rounded-lg transition-colors"
-          >
-            Add Experience
-          </button>
           {own && (
-            <div className="grid grid-cols-1 gap-4 mt-4">
+            <button
+              onClick={toggleExperienceForm}
+              className="rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            >
+              Add Experience
+            </button>
+          )}
+          {own && (
+            <div className="mt-4 grid grid-cols-1 gap-4">
               <UploadButton
                 endpoint="cv"
                 onClientUploadComplete={(res) => {
