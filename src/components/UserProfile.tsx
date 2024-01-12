@@ -3,6 +3,7 @@ import { Experience, User } from '@prisma/client';
 import ExperienceForm from './ExperienceForm';
 import { api } from '~/utils/api';
 import ExperienceCard from './ExperienceCard';
+import { UploadButton } from "~/utils/uploadthing";
 
 interface UserProfileProps {
   user: User;
@@ -49,17 +50,20 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
             </a>
           )}
           {own && (
-            <div className="flex flex-col w-full mt-8 space-y-3">
-              <button className="bg-indigo-600 text-white text-sm font-medium px-6 py-3 rounded-lg hover:bg-indigo-500 transition-colors">
-                Add CV
-              </button>
-              <button 
-                onClick={toggleExperienceForm}
-                className="bg-gray-500 text-white text-sm font-medium px-6 py-3 rounded-lg hover:bg-gray-400 transition-colors"
-              >
-                Add Experience
-              </button>
-            </div>
+            <div className="mb-4 grid grid-cols-1 gap-4">
+          <UploadButton
+        endpoint="imageUploader"
+        onClientUploadComplete={(res) => {
+          api.user.addCv.useMutation(res)
+          console.log("Files: ", res);
+          alert("Upload Completed");
+        }}
+        onUploadError={(error: Error) => {
+          // Do something with the error.
+          alert(`ERROR! ${error.message}`);
+        }}
+      />
+          </div>
           )}
         </div>
       </div>
