@@ -1,13 +1,16 @@
+"use client;";
 // RegistrationForm.tsx
 import React from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import TextareaInput from "./TextareaInput";
 import Input from "./Input";
+import { UploadButton } from "~/utils/uploadthing";
 export interface UserRegistrationFormData {
   university: string;
   faculty: string;
   description: string;
   dob: Date;
+  cv?: string;
 }
 
 interface UserRegistrationFormProps {
@@ -20,6 +23,7 @@ export const UserRegistrationForm: React.FC<UserRegistrationFormProps> = ({
   const {
     handleSubmit,
     register,
+    setValue,
     formState: { errors },
   } = useForm<UserRegistrationFormData>({});
 
@@ -83,7 +87,22 @@ export const UserRegistrationForm: React.FC<UserRegistrationFormProps> = ({
               {...register("dob", { required: true, valueAsDate: true })}
             />
           </div>
+          <div className="mb-4 grid grid-cols-1 gap-4">
+            <UploadButton
+              endpoint="cv"
+              onClientUploadComplete={(res) => {
+                console.log("🚀 ~ onClientUploadComplete ~ res:", res);
+                const file = res.at(0);
+                if (!file) return;
 
+                setValue("cv", file.url);
+              }}
+              onUploadError={(error: Error) => {
+                // Do something with the error.
+                alert(`ERROR! ${error.message}`);
+              }}
+            />
+          </div>
           <div className="flex items-center justify-center">
             <button
               className="focus:shadow-outline rounded bg-gray-800 px-4 py-2 font-bold text-white hover:bg-gray-700 focus:outline-none"

@@ -9,13 +9,9 @@ const Home: NextPage = () => {
   if (status === "loading") {
     return <div>Loading</div>;
   }
-  
-  if (status === "unauthenticated") {
+  if (!session && status === "unauthenticated") {
     return( <div>  <button onClick={() => signIn("google")}>Sign in with Google</button>
     </div>);
-  }
-  if(!session){
-    return <div>No session found</div>
   }
   const isEmployer = session?.user.role === "employer";
   return (

@@ -7,6 +7,7 @@ interface InputProps {
   autoComplete?: string;
   placeholder?: string;
   min?: number | string;
+  max?: number | string;
   type: HTMLInputTypeAttribute;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
