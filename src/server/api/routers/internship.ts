@@ -106,6 +106,7 @@ export const internshipRouter = createTRPCRouter({
         where: input,
         include: {
           Company: true,
+          applicants: true,
         },
       });
     }),

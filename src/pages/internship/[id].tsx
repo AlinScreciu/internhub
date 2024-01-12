@@ -2,6 +2,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { type ParsedUrlQuery } from "querystring";
 import React from "react";
+import EmployerInternship from "~/components/EmployerInternship";
 import Header from "~/components/Header";
 import StudentInternship from "~/components/StudentInternship";
 interface ExtendedQuery extends ParsedUrlQuery {
@@ -19,11 +20,13 @@ const Internship = () => {
   if (status === "unauthenticated" || !session) {
     return <>You need to login</>;
   }
-
+  const isStudent = session.user.role === "student";
+  const isEmployer = session.user.role === "employer";
   return (
     <div className="h-screen w-screen bg-gray-50">
       <Header id={session.user.id} search={false} />
-      {session.user.role === "student" && <StudentInternship id={query.id} />}
+      {isStudent && <StudentInternship id={query.id} />}
+      {isEmployer && <EmployerInternship id={query.id} />}
     </div>
   );
 };
