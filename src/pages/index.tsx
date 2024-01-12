@@ -22,7 +22,7 @@ const Home: NextPage = () => {
   const isStudent = session?.user.role === "student";
   return (
     <div className="h-screen w-screen">
-      <Header search />
+      <Header search id={session?.user.id}/>
       {isEmployer && <EmployerHome />}
       {isStudent && <StudentHome />}
     </div>

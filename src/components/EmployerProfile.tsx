@@ -4,6 +4,7 @@ import React from "react";
 
 const EmployerProfile: React.FC<{
   user: User;
+  own: boolean;
 }> = ({ user }) => {
   return (
     <div>

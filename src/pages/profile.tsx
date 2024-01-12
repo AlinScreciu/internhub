@@ -19,7 +19,7 @@ const Profile = () => {
   }
   return (
     <div>
-      <Header search={false} />
+      <Header search={false} id={user.id} />
       {user.role === "student" && <UserProfile user={user} />}
       {user.role === "employer" && <EmployerProfile user={user} />}
     </div>
