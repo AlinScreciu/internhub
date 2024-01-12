@@ -5,6 +5,32 @@ import { prisma } from "../../db"
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const userRouter = createTRPCRouter({
+  applyToInternship: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const { user } = ctx.session;
+      if (user.role !== "student") {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Only students can apply to internships",
+        });
+      }
+
+      await ctx.db.internship.update({
+        where: input,
+        data: {
+          applicants: {
+            connect: {
+              id: user.id,
+            },
+          },
+        },
+      });
+      return await ctx.db.user.findFirst({
+        where: user,
+        include: { internships: true },
+      });
+    }),
   register: protectedProcedure
     .input(
       z.object({
