@@ -19,30 +19,29 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
   const toggleExperienceForm = () => {
     setAddExperience(!addExperience);
   };
+
   const experiences = experiencesQuery.data;
   useLayoutEffect(() => {
-    if (!experiences) {
-      setAddExperience(true);
-      return;
-    }
-    if (experiences.length === 0) {
+    if (!experiences || experiences.length === 0) {
       setAddExperience(true);
     }
   }, [experiences]);
+
   const uploadCvMutation = api.user.addCv.useMutation();
+
   return (
     <div className="flex h-screen">
       {/* Profile Sidebar */}
-      <div className="w-1/3 border-r-2 border-gray-200 bg-white p-6">
+      <div className="w-1/3 border-r border-gray-300 bg-white p-8 shadow-md">
         <div className="flex flex-col items-center">
-          <div className="mb-4 h-32 w-32 overflow-hidden">
+          <div className="mb-6 h-40 w-40 overflow-hidden rounded-full shadow">
             {user.image ? (
               <Image
                 src={user.image}
-                width={50}
-                height={50}
+                width={160}
+                height={160}
                 alt={user.name ?? "User Image"}
-                className="h-full w-full rounded-full object-cover"
+                className="object-cover"
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center rounded-full bg-gray-300">
@@ -50,16 +49,16 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
               </div>
             )}
           </div>
-          <h1 className="text-3xl font-bold text-gray-800">
+          <h1 className="text-4xl font-bold text-gray-800 mb-2">
             {user.name ?? "Anonymous"}
           </h1>
-          <p className="mb-1 text-sm text-gray-500">
+          <p className="text-sm text-gray-500 mb-1">
             {user.university ?? "No University"}
           </p>
-          <p className="mb-4 text-sm text-gray-500">
+          <p className="text-sm text-gray-500 mb-4">
             {user.faculty ?? "No Faculty"}
           </p>
-          <p className="mb-4 text-center text-gray-600">
+          <p className="text-center text-gray-600 mb-4">
             {user.description ?? "No description provided."}
           </p>
           {user.cv && (
@@ -67,13 +66,19 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
               href={user.cv}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-4 inline-block rounded-lg bg-indigo-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-indigo-500"
+              className="inline-block rounded-lg bg-green-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-green-700 mb-4"
             >
               View My CV
             </a>
           )}
+          <button 
+            onClick={toggleExperienceForm}
+            className="bg-blue-500 hover:bg-blue-700 text-white text-sm font-medium px-6 py-3 rounded-lg transition-colors"
+          >
+            Add Experience
+          </button>
           {own && (
-            <div className="mb-4 grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 gap-4 mt-4">
               <UploadButton
                 endpoint="cv"
                 onClientUploadComplete={(res) => {
@@ -90,21 +95,20 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
           )}
         </div>
       </div>
+
       {/* Main Content */}
-      <div className="flex-1 bg-gray-50 p-6">
+      <div className="flex-1 bg-gray-50 p-8">
         {addExperience ? (
           <ExperienceForm setAdd={setAddExperience} />
         ) : (
-          experiencesQuery.data?.map((experience) => {
-            return (
-              <ExperienceCard
-                key={experience.id}
-                experience={experience}
-                own={own}
-                onDelete={(id) => console.log("Delete experience with id:", id)}
-              />
-            );
-          })
+          experiencesQuery.data?.map((experience) => (
+            <ExperienceCard
+              key={experience.id}
+              experience={experience}
+              own={own}
+              onDelete={(id) => console.log("Delete experience with id:", id)}
+            />
+          ))
         )}
       </div>
     </div>
