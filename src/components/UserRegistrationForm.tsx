@@ -30,7 +30,7 @@ export const UserRegistrationForm: React.FC<UserRegistrationFormProps> = ({
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="w-full max-w-screen-lg rounded-md bg-white px-6 py-4 shadow-md">
-        <h1 className="mb-8 justify-center text-3xl font-bold text-red-800">
+        <h1 className="mb-8 justify-center text-3xl font-bold text-primary">
           You need to submit this form to complete the registration process!
         </h1>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -73,25 +73,29 @@ export const UserRegistrationForm: React.FC<UserRegistrationFormProps> = ({
           </div>
 
           <div className="mb-4 grid grid-cols-2 gap-4">
-            <TextareaInput
-              label="Description"
-              {...register("description", { required: true })}
-            />
-            {errors.description && <span>{errors.description.message}</span>}
-          </div>
-
-          <div className="mb-4 grid grid-cols-2 gap-4">
+            <div>
+              <TextareaInput
+                label="Description"
+                {...register("description", { required: true })}
+              />
+              {errors.description && <span>{errors.description.message}</span>}
+            </div>
             <Input
               label="Date of Birth"
               type="date"
               {...register("dob", { required: true, valueAsDate: true })}
             />
           </div>
+
           <div className="mb-4 grid grid-cols-1 gap-4">
             <UploadButton
+            appearance={{
+              button: {
+                backgroundColor: "#94d479"
+              }
+            }}
               endpoint="cv"
               onClientUploadComplete={(res) => {
-                console.log("🚀 ~ onClientUploadComplete ~ res:", res);
                 const file = res.at(0);
                 if (!file) return;
 

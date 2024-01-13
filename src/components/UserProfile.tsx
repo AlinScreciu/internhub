@@ -15,7 +15,7 @@ interface UserProfileProps {
 
 const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
   const experiencesQuery = api.experience.getAll.useQuery();
-  const [addExperience, setAddExperience] = useState(own ? false : false);
+  const [addExperience, setAddExperience] = useState(false);
 
   const toggleExperienceForm = () => {
     setAddExperience(!addExperience);
@@ -23,10 +23,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
 
   const experiences = experiencesQuery.data;
   useLayoutEffect(() => {
-    if (!own) return;
-    if (!experiences || experiences.length === 0) {
-      setAddExperience(true);
-    }
+    if (!own || !experiences) return;
+    if (experiences.length === 0) setAddExperience(true);
   }, [experiences, own]);
 
   const uploadCvMutation = api.user.addCv.useMutation();
@@ -129,7 +127,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
                 key={experience.id}
                 experience={experience}
                 own={own}
-                onDelete={(id) => console.log("Delete experience with id:", id)}
               />
             ))}
           </div>

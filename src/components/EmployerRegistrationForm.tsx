@@ -36,7 +36,7 @@ export const CompanyRegistrationForm: React.FC<
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
       <div className="w-full max-w-screen-lg rounded-md bg-white px-6 py-4 shadow-md">
-        <h1 className="mb-8 justify-center text-3xl font-bold text-red-800">
+        <h1 className="mb-8 justify-center text-3xl font-bold text-primary">
           You need to submit this form to complete the registration process!
         </h1>
         <form onSubmit={handleSubmit(onSubmit)}>

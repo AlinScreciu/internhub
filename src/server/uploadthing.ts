@@ -19,15 +19,12 @@ export const ourFileRouter = {
       // Whatever is returned here is accessible in onUploadComplete as `metadata`
       return { userId: session.user.id };
     })
-    .onUploadComplete(({ metadata, file }) => {
+    .onUploadComplete(({ metadata, file: _ }) => {
       // This code RUNS ON YOUR SERVER after upload
       console.log("Upload complete for userId:", metadata.userId);
 
-      console.log("file url", file.url);
       const res = { uploadedBy: metadata.userId };
       // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
-      console.log("🚀 ~ .onUploadComplete ~ res:", res);
-
       return res;
     }),
 } satisfies FileRouter;

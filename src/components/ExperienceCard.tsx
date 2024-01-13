@@ -8,7 +8,6 @@ import { RxCross1 } from "react-icons/rx";
 interface ExperienceCardProps {
   experience: Experience;
   own: boolean;
-  onDelete: (id: string) => void;
 }
 
 const ExperienceCard: React.FC<ExperienceCardProps> = ({ experience, own }) => {

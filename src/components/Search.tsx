@@ -18,7 +18,6 @@ const Search: React.FC = () => {
   useEffect(() => {
     setStoreQuery(debouncedQuery);
   }, [debouncedQuery, setStoreQuery]);
-  console.log("render");
   return (
     <div>
       <Input name="query" type="text" value={query} onChange={onQueryChange} />

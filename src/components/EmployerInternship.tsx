@@ -59,7 +59,7 @@ function downloadFiles(applicants: User[]): void {
   );
 
   Promise.all(downloadPromises)
-    .then(() => console.log("All CVs downloaded successfully"))
+    .then()
     .catch((error) => console.error("Error downloading CVs:", error));
 }
 const JobCard: React.FC<{ internship: InternshipWithApplicants }> = ({

@@ -22,7 +22,6 @@ export const internshipRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const user = ctx.session.user;
-      console.log("🚀 ~ .mutation ~ user:", user);
 
       if (user.role != "employer") {
         throw new TRPCError({
@@ -142,17 +141,7 @@ export const internshipRouter = createTRPCRouter({
         applicants: true,
       },
     });
-    console.log(
-      "🚀 ~ getAppliedForCurrentUser:protectedProcedure.query ~ user:",
-      user,
-    );
 
-    for (const job of jobs) {
-      console.log(
-        "🚀 ~ getAppliedForCurrentUser:protectedProcedure.query ~ job:",
-        job,
-      );
-    }
     return jobs;
   }),
 });

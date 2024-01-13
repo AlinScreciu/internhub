@@ -52,7 +52,6 @@ const JobForm: React.FC = () => {
   const payStart = watch("payRangeStart");
   const payEnd = watch("payRangeEnd");
   const onSubmit: SubmitHandler<UserRegistrationFormData> = (data) => {
-    console.log(data);
     postJobMutation.mutate(data);
   };
   return (

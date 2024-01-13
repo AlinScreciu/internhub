@@ -23,7 +23,6 @@ const Profile: React.FC<{ session: Session }> = ({ session }) => {
   }
 
   const user = userQuery.data;
-  console.log(user);
   if (!user) return <div> loading</div>;
   const own = query.id === session?.user.id;
 

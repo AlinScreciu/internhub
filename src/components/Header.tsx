@@ -8,8 +8,6 @@ const Header: React.FC<{ search: boolean; user: User }> = ({
   search,
   user,
 }) => {
-  console.log("🚀 ~ user:", user);
-
   const isStudent = user?.role === "student";
   return (
     <div className="bg-secondary flex h-20 w-screen items-center justify-between px-4">
