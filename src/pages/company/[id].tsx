@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { type ParsedUrlQuery } from "querystring";
 import React from "react";
 import AddReviewModal from "~/components/AddReviewModal";
+import CompanyPreview from "~/components/CompanyPreview";
 import ErrorSpan from "~/components/ErrorSpan";
 import Header from "~/components/Header";
 import Reviews from "~/components/Reviews";
@@ -28,10 +29,13 @@ const Company: React.FC<{ id: string; user: User }> = ({ id, user }) => {
   const isStudent = user.role === "student";
   return (
     <div className="h-[calc(100vh-5rem)] w-screen">
-      <Header id={id} search={false} />
-      <div>
-        <div>CompanyOverview</div>
-        <div>
+      <Header user={user} search={false} />
+      <div className="flex ">
+        <div className="flex-1 p-4">
+          <CompanyPreview company={company} />
+        </div>
+        <div className="flex-1 p-4">
+          <div className="overflow-y-auto text-3xl font-bold">Reviews</div>
           <Reviews companyId={company.id} />
           {isStudent && <AddReviewModal companyId={company.id} />}
         </div>

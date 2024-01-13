@@ -10,7 +10,7 @@ const Home: NextPage = () => {
   if (status === "loading") {
     return <div>Loading</div>;
   }
-  if (!session && status === "unauthenticated") {
+  if (status === "unauthenticated" || !session?.user || !session) {
     return (
       <div>
         {" "}
@@ -18,15 +18,15 @@ const Home: NextPage = () => {
       </div>
     );
   }
+
   const isEmployer = session?.user.role === "employer";
   const isStudent = session?.user.role === "student";
   return (
     <div className="h-[calc(100vh-5rem)] w-screen">
-      <Header search id={session?.user.id} />
+      <Header search user={session.user} />
       {isEmployer && <EmployerHome />}
       {isStudent && <StudentHome />}
     </div>
   );
 };
-
 export default Home;

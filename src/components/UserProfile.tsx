@@ -15,7 +15,7 @@ interface UserProfileProps {
 
 const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
   const experiencesQuery = api.experience.getAll.useQuery();
-  const [addExperience, setAddExperience] = useState(own ? false : false);
+  const [addExperience, setAddExperience] = useState(false);
 
   const toggleExperienceForm = () => {
     setAddExperience(!addExperience);
@@ -23,10 +23,8 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
 
   const experiences = experiencesQuery.data;
   useLayoutEffect(() => {
-    if (!own) return;
-    if (!experiences || experiences.length === 0) {
-      setAddExperience(true);
-    }
+    if (!own || !experiences) return;
+    if (experiences.length === 0) setAddExperience(true);
   }, [experiences, own]);
 
   const uploadCvMutation = api.user.addCv.useMutation();
@@ -65,10 +63,10 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
               </div>
             </div>
             <div className="flex flex-col gap-4 ">
-              <div className="flex justify-center text-[18px] text-gray-900">
+              <div className="flex justify-center  text-[18px] text-gray-900">
                 Description:
               </div>
-              <div className="mb-3 flex max-h-[200px] justify-center overflow-auto text-gray-800">
+              <div className="mb-3 flex max-h-[calc(55vh)] justify-center overflow-y-auto   text-gray-800">
                 {user.description ?? "No description provided"}
               </div>
             </div>
@@ -123,13 +121,12 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
         {addExperience ? (
           <ExperienceForm setAdd={setAddExperience} />
         ) : (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 justify-center gap-4">
             {experiencesQuery.data?.map((experience) => (
               <ExperienceCard
                 key={experience.id}
                 experience={experience}
                 own={own}
-                onDelete={(id) => console.log("Delete experience with id:", id)}
               />
             ))}
           </div>

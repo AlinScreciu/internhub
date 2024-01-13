@@ -22,7 +22,6 @@ export const internshipRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const user = ctx.session.user;
-      console.log("🚀 ~ .mutation ~ user:", user);
 
       if (user.role != "employer") {
         throw new TRPCError({
@@ -48,6 +47,7 @@ export const internshipRouter = createTRPCRouter({
           where: {
             companyId,
             deadline: { gte: new Date() },
+
             OR: [
               { position: { contains: query, mode: "insensitive" } },
               { location: { contains: query, mode: "insensitive" } },
@@ -73,11 +73,20 @@ export const internshipRouter = createTRPCRouter({
       });
     }),
   getAll: protectedProcedure
-    .input(z.object({ query: z.string() }))
+    .input(z.object({ query: z.string(), applicant: z.boolean().optional() }))
     .query(async ({ ctx, input }) => {
-      const { query } = input;
+      const { query, applicant } = input;
       return await ctx.db.internship.findMany({
         where: {
+          ...(applicant
+            ? {
+                applicants: {
+                  none: {
+                    id: ctx.session.user.id,
+                  },
+                },
+              }
+            : {}),
           OR: [
             { position: { contains: query, mode: "insensitive" } },
             { location: { contains: query, mode: "insensitive" } },
@@ -132,17 +141,7 @@ export const internshipRouter = createTRPCRouter({
         applicants: true,
       },
     });
-    console.log(
-      "🚀 ~ getAppliedForCurrentUser:protectedProcedure.query ~ user:",
-      user,
-    );
 
-    for (const job of jobs) {
-      console.log(
-        "🚀 ~ getAppliedForCurrentUser:protectedProcedure.query ~ job:",
-        job,
-      );
-    }
     return jobs;
   }),
 });

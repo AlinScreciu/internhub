@@ -38,7 +38,6 @@ const AddReviewForm: React.FC<{
   const start = watch("startDate");
   const end = watch("endDate");
   const onSubmit: SubmitHandler<ReviewFormData> = (data) => {
-    console.log(data);
     addReviewMutation.mutate({ ...data, companyId });
   };
   return (

@@ -4,8 +4,9 @@ import { useSession } from "next-auth/react";
 import { type ParsedUrlQuery } from "querystring";
 import { useRouter } from "next/router";
 import UserProfile from "~/components/UserProfile";
-import EmployerProfile from "~/components/EmployerProfile";
 import { type Session } from "next-auth";
+import { type GetServerSideProps } from "next";
+import { getServerAuthSession } from "~/server/auth";
 
 interface ExtendedQuery extends ParsedUrlQuery {
   id: string;
@@ -22,16 +23,12 @@ const Profile: React.FC<{ session: Session }> = ({ session }) => {
   }
 
   const user = userQuery.data;
-  console.log(user);
   if (!user) return <div> loading</div>;
   const own = query.id === session?.user.id;
 
   return (
     <div className=" h-[calc(100vh-5rem)] w-screen ">
-      <Header search={false} id={query.id} />
-
       {user.role === "student" && <UserProfile user={user} own={own} />}
-      {user.role === "employer" && <EmployerProfile user={user} own={own} />}
     </div>
   );
 };
@@ -42,15 +39,37 @@ const ProfilePage = () => {
   if (status === "loading") {
     return <div>Loading</div>;
   }
-  if (!session) {
+  if (!session?.user || !session) {
     return <>Log in</>;
   }
 
   return (
     <>
+      <Header search={false} user={session.user} />
+
       <Profile session={session} />
     </>
   );
 };
 
+export const getServerSideProps = (async ({ req, res, query }) => {
+  const { id } = query as ExtendedQuery;
+  const session = await getServerAuthSession({ req, res });
+  if (!session?.user || !session.user.company_id) {
+    return {
+      redirect: {
+        destination: "/register",
+        permanent: false,
+      },
+    };
+  }
+  if (session.user.role === "employer" && session.user.id === id)
+    return {
+      redirect: {
+        destination: `/company/${session.user.company_id}`,
+        permanent: true,
+      },
+    };
+  return { props: {} };
+}) satisfies GetServerSideProps;
 export default ProfilePage;
