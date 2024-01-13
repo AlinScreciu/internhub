@@ -32,12 +32,12 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
   const uploadCvMutation = api.user.addCv.useMutation();
 
   return (
-    <div className="flex flex-row justify-center  h-[calc(100vh-5rem)] ">
+    <div className="flex h-[calc(100vh-5rem)]  flex-row  justify-center ">
       {/* Profile Sidebar */}
-      <div className="w-1/3 ml-4 mt-4">
-        <div className="  rounded-lg bg-white p-3 border-gray-200 border shadow-gray-300 shadow-lg">
+      <div className="ml-4 mt-4 w-1/3">
+        <div className="  rounded-lg border border-gray-200 bg-white p-3 shadow-lg shadow-gray-300">
           <div className="flex flex-col items-center">
-            <div className="mb-3 h-30 w-30 overflow-hidden rounded-full shadow">
+            <div className="h-30 w-30 mb-3 overflow-hidden rounded-full shadow">
               {user.image ? (
                 <Image
                   src={user.image}
@@ -56,11 +56,11 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
               {user.name ?? "Anonymous"}
             </h1>
             <div className="flex justify-between gap-3">
-              <div className="mb-1 text-gray-600 text-lg">
+              <div className="mb-1 text-lg text-gray-600">
                 {user.university ?? "No University"}
               </div>
               <div>-</div>
-              <div className="mb-4 text-gray-600 text-lg">
+              <div className="mb-4 text-lg text-gray-600">
                 {user.faculty ?? "No Faculty"}
               </div>
             </div>
@@ -69,16 +69,16 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
                 Description:
               </div>
               <div className="mb-3 flex max-h-[200px] justify-center overflow-auto text-gray-800">
-               {user.description ?? "No description provided"}
+                {user.description ?? "No description provided"}
               </div>
             </div>
-            <div className=" flex flex-row gap-4 justify-center items-center content-center">
+            <div className=" flex flex-row content-center items-center justify-center gap-4">
               {user.cv && (
                 <Link
                   href={user.cv}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-md p-2 bg-primary text-sm font-bold text-white shadow-md"
+                  className="rounded-md bg-primary p-2 text-sm font-bold text-white shadow-md"
                 >
                   VIEW MY CV
                 </Link>
@@ -86,16 +86,21 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
               {own && (
                 <button
                   onClick={toggleExperienceForm}
-                  className="rounded-md p-2 bg-primary text-sm font-bold text-white shadow-md"
+                  className="rounded-md bg-primary p-2 text-sm font-bold text-white shadow-md"
                 >
                   ADD EXPERIENCE
                 </button>
               )}
-        </div>
+            </div>
             {own && (
               <div className="mt-4 grid grid-cols-1 gap-4">
                 <UploadButton
                   endpoint="cv"
+                  appearance={{
+                    button: {
+                      backgroundColor: "#94d479",
+                    },
+                  }}
                   onClientUploadComplete={(res) => {
                     const file = res.at(0);
                     if (!file) return;
@@ -108,14 +113,13 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
                 )}
               </div>
             )}
-             
           </div>
         </div>
       </div>
-      <div className=" w-[1px] bg-gray-300 ml-3"></div>
+      <div className=" ml-3 w-[1px] bg-gray-300"></div>
 
       {/* Main Content */}
-      <div className="w-2/3 bg-gray-50 p-8 overflow-auto" style={{ maxHeight: 'calc(100vh - 5rem)' }}>
+      <div className=" w-2/3 overflow-auto bg-gray-50 p-8">
         {addExperience ? (
           <ExperienceForm setAdd={setAddExperience} />
         ) : (

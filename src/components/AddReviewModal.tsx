@@ -19,7 +19,7 @@ const AddReviewModal: React.FC<{ companyId: string }> = ({ companyId }) => {
   };
 
   return (
-    <div>
+    <div className="pt-3">
       <button
         type="button"
         className="rounded-full bg-primary px-6 py-2 font-bold text-white"

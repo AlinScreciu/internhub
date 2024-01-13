@@ -23,6 +23,7 @@ export const companyRouter = createTRPCRouter({
         headquarters: z.string(),
         description: z.string(),
         domain: z.string(),
+        website: z.string().url(),
         employees: z.number().min(1, "Must have at least one employee"),
       }),
     )

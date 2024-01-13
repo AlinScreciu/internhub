@@ -5,13 +5,17 @@ import Link from "next/link";
 
 const Header: React.FC<{ search: boolean; id: string }> = ({ search, id }) => {
   return (
-    <div className="flex h-20 items-center justify-between bg-slate-900">
+    <div className="bg-secondary flex h-20 w-screen items-center justify-between px-4">
       <Link href={"/"}>
-        <FaHome className="ml-4 text-3xl text-primary" />
+        <FaHome className="text-3xl text-primary" />
       </Link>
-      {search && <Search />}
+      {search && (
+        <div className="m-2 basis-1/5 ">
+          <Search />
+        </div>
+      )}
       <Link href={`/profile/${id}`}>
-        <FaUserCircle className="mr-4 text-3xl text-primary" />
+        <FaUserCircle className="text-3xl text-primary" />
       </Link>
     </div>
   );

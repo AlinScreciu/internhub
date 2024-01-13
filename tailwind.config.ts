@@ -11,6 +11,8 @@ export default withUt({
       },
       colors: {
         primary: "#94d479",
+        darker: "#6a9956",
+        secondary: "#475B5A",
       },
     },
   },

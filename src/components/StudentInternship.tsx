@@ -25,15 +25,15 @@ const JobCard: React.FC<{ internship: Internship }> = ({ internship }) => {
   };
 
   return (
-    <div className="m-5 h-[75%] rounded-lg bg-white p-10 shadow-lg">
-      <div className="flex justify-end pb-4 text-gray-600">
-        Deadline: {new Date(internship.deadline).toLocaleDateString()}
-      </div>
-
-      <div className="mb-4 flex items-center">
+    <div className="h-fit rounded-lg bg-white p-10 shadow-lg">
+      <div className="flex items-center pb-4">
         <div className="flex-grow">
-          <div className="flex justify-center pb-3 text-xl font-bold">
+          <div className="flex justify-start pb-3 text-xl font-bold">
             {internship.position}
+          </div>
+          <div className="flex justify-start pb-4 text-gray-600">
+            Deadline:{" "}
+            {new Date(internship.deadline).toLocaleDateString("en-EN")}
           </div>
           <div className=" grid grid-cols-3 gap-2 ">
             <div className="flex flex-row items-center gap-2">
@@ -52,10 +52,7 @@ const JobCard: React.FC<{ internship: Internship }> = ({ internship }) => {
             </div>
             {internship.paid === true && (
               <div className="flex flex-row items-center gap-2">
-                <GiMoneyStack
-                  className=" h-5 w-5"
-                  style={{ color: "#94d479" }}
-                />
+                <GiMoneyStack className="h-5 w-5 text-primary" />
                 <span>Paid</span>
               </div>
             )}
@@ -73,11 +70,11 @@ const JobCard: React.FC<{ internship: Internship }> = ({ internship }) => {
                 {internship.payRangeStart} - {internship.payRangeEnd}
               </div>
             )}
-            <div className="flex flex-row items-center gap-2">
+            <div className="col-span-2 flex w-fit flex-row items-center gap-2 ">
               <FaRegUser className="h-5 w-5 text-primary " />
-              <div className="text-gray-600">
-                Positions: {internship.openPositions}
-              </div>
+              <span className="  text-gray-600">
+                Positions open: {internship.openPositions}
+              </span>
             </div>
           </div>
         </div>
@@ -102,25 +99,51 @@ const JobCard: React.FC<{ internship: Internship }> = ({ internship }) => {
     </div>
   );
 };
-
+const CompanyPreview: React.FC<{ company: Company }> = ({ company }) => {
+  return (
+    <div>
+      <div className="py-1 text-3xl font-bold">{company.name}</div>
+      <div className="py-1 text-2xl font-bold">Overview</div>
+      <div>{company.description}</div>
+      <div>
+        <div className="font-bold ">Website</div>
+        <Link className="text-blue-700" href={company.website} target="_blank">
+          {company.website}
+        </Link>
+      </div>
+      <div>
+        <div className="font-bold">Domain</div>
+        <div>{company.domain}</div>
+      </div>
+      <div>
+        <div className="font-bold">Company size</div>
+        <div>{company.employees} employees</div>
+      </div>
+      <div>
+        <div className="font-bold">Headquarters</div>
+        <div>{company.headquarters}</div>
+      </div>
+      <Link href={`/company/${company.id}`} target="_blank">
+        {" "}
+        Go to company page
+      </Link>
+    </div>
+  );
+};
 const CompanySection: React.FC<{ company: Company }> = ({ company }) => {
   // Placeholder component for company overview and reviews
   // You would implement the logic to fetch and display company data here
 
   return (
     <div className="p-5">
-      <div className="mb-4 text-lg font-bold">Company overview</div>
-      {/* Placeholder for company information */}
-      <Link href={`/company/${company.id}`} target="_blank">
-        {" "}
-        Go to company page
-      </Link>
-      <div className="mb-6">[Company information here]</div>
-      <div className="mb-4 text-lg font-bold">Company reviews</div>
-      <div className="mb-6">
+      <div className="pb-5">
+        <CompanyPreview company={company} />
+      </div>
+      <div className="pb-4 text-lg font-bold">Reviews</div>
+      <div className="h-[calc(32vh)] overflow-y-auto ">
         <Reviews companyId={company.id} />
       </div>
-      <div className="mb-6 flex flex-col">
+      <div className="flex flex-col pb-6">
         <AddReviewModal companyId={company.id} />
       </div>
     </div>
@@ -142,7 +165,7 @@ const StudentInternship: React.FC<{ id: string }> = (query) => {
   }
   const internship = internshipQuery.data;
   return (
-    <div className="flex h-full divide-x divide-gray-300">
+    <div className="flex h-[calc(100vh-5rem)] w-screen divide-x divide-gray-300 ">
       <div className="w-2/5 p-4">
         <JobCard internship={internship} />
       </div>
