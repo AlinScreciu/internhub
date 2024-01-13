@@ -4,7 +4,7 @@ import JobForm from "./JobForm";
 
 const EmployerHome = () => {
   return (
-    <div className="flex  h-screen w-screen">
+    <div className="h-[calc(100vh  - 5rem)] flex w-screen">
       <div className="flex-1">
         <JobsPosted />
       </div>

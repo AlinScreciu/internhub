@@ -15,9 +15,12 @@ const Register: React.FC = () => {
   const [error, setError] = useState("");
   const [role, setRole] = useState<UserRole | "">("");
   const router = useRouter();
+  const { data: session, status, update } = useSession();
+
   const userRegisterMutation = api.user.register.useMutation({
     onSuccess: async () => {
       await router.push("/");
+      await update();
     },
     onError(error) {
       setError(error.message);
@@ -28,13 +31,12 @@ const Register: React.FC = () => {
       await router.push("/");
     },
   });
-  const { data: session, status } = useSession();
-  const handleCompanyFormSubmit: SubmitHandler<
-    EmployerRegistrationFormData
-  > = async (data: EmployerRegistrationFormData) => {
+  const handleCompanyFormSubmit: SubmitHandler<EmployerRegistrationFormData> = (
+    data: EmployerRegistrationFormData,
+  ) => {
     employerRegistrationMutation.mutate(data);
   };
-  const handleUserFormSubmit: SubmitHandler<UserRegistrationFormData> = async (
+  const handleUserFormSubmit: SubmitHandler<UserRegistrationFormData> = (
     data: UserRegistrationFormData,
   ) => {
     userRegisterMutation.mutate(data);

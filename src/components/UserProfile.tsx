@@ -32,7 +32,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
   const uploadCvMutation = api.user.addCv.useMutation();
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-[calc(100vh-5rem)]">
       {/* Profile Sidebar */}
       <div className="w-1/3 border-r border-gray-300 bg-white p-8 shadow-md">
         <div className="flex flex-col items-center">

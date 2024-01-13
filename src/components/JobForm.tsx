@@ -56,7 +56,7 @@ const JobForm: React.FC = () => {
     postJobMutation.mutate(data);
   };
   return (
-    <div className="flex min-h-screen w-max items-center justify-center bg-gray-100">
+    <div className="flex min-h-[calc(100vh-5rem)] w-max items-center justify-center bg-gray-100">
       <div className="w-full max-w-screen-lg rounded-md bg-white px-6 py-4 shadow-md">
         <h1 className="mb-8 justify-center text-3xl font-bold text-red-800">
           Add a job{" "}

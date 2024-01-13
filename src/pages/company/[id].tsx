@@ -1,23 +1,60 @@
-import { type NextPage } from "next";
+import type { NextPage } from "next";
+import type { User } from "next-auth";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { type ParsedUrlQuery } from "querystring";
 import React from "react";
+import AddReviewModal from "~/components/AddReviewModal";
+import ErrorSpan from "~/components/ErrorSpan";
+import Header from "~/components/Header";
+import Reviews from "~/components/Reviews";
 import { api } from "~/utils/api";
 interface ExtendedQuery extends ParsedUrlQuery {
   id: string;
 }
-const Company: NextPage = () => {
-  const router = useRouter();
-  const query = router.query as ExtendedQuery;
-  const companyQuery = api.company.getById.useQuery(query);
+const Company: React.FC<{ id: string; user: User }> = ({ id, user }) => {
+  const companyQuery = api.company.getById.useQuery({ id });
   if (companyQuery.isLoading) {
     return <div>Loading</div>;
   }
   if (companyQuery.isError) {
-    return <div>{companyQuery.error.message}</div>;
+    return <ErrorSpan message={companyQuery.error.message} />;
   }
   const company = companyQuery.data;
-  return <div>{JSON.stringify(company, null, 4)}</div>;
+
+  if (!company) {
+    return <ErrorSpan message={"Failed to find company"} />;
+  }
+  const isStudent = user.role === "student";
+  return (
+    <div className="h-[calc(100vh-5rem)] w-screen">
+      <Header id={id} search={false} />
+      <div>
+        <div>CompanyOverview</div>
+        <div>
+          <Reviews companyId={company.id} />
+          {isStudent && <AddReviewModal companyId={company.id} />}
+        </div>
+      </div>
+    </div>
+  );
 };
 
-export default Company;
+const CompanyWrapper: NextPage = () => {
+  const router = useRouter();
+  const { id } = router.query as ExtendedQuery;
+  const { data: session, status } = useSession();
+  if (status === "loading") {
+    return <div>loading...</div>;
+  }
+  if (status === "unauthenticated" || !session) {
+    return <div>you have to login...</div>;
+  }
+  return (
+    <>
+      <Company id={id} user={session.user} />
+    </>
+  );
+};
+
+export default CompanyWrapper;
