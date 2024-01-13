@@ -9,7 +9,7 @@ import { MdLocationCity } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
 import Reviews from "./Reviews";
 import AddReviewModal from "./AddReviewModal";
-import Link from "next/link";
+import CompanyPreview from "./CompanyPreview";
 
 const JobCard: React.FC<{ internship: Internship }> = ({ internship }) => {
   const utils = api.useUtils();
@@ -99,37 +99,7 @@ const JobCard: React.FC<{ internship: Internship }> = ({ internship }) => {
     </div>
   );
 };
-const CompanyPreview: React.FC<{ company: Company }> = ({ company }) => {
-  return (
-    <div>
-      <div className="py-1 text-3xl font-bold">{company.name}</div>
-      <div className="py-1 text-2xl font-bold">Overview</div>
-      <div>{company.description}</div>
-      <div>
-        <div className="font-bold ">Website</div>
-        <Link className="text-blue-700" href={company.website} target="_blank">
-          {company.website}
-        </Link>
-      </div>
-      <div>
-        <div className="font-bold">Domain</div>
-        <div>{company.domain}</div>
-      </div>
-      <div>
-        <div className="font-bold">Company size</div>
-        <div>{company.employees} employees</div>
-      </div>
-      <div>
-        <div className="font-bold">Headquarters</div>
-        <div>{company.headquarters}</div>
-      </div>
-      <Link href={`/company/${company.id}`} target="_blank">
-        {" "}
-        Go to company page
-      </Link>
-    </div>
-  );
-};
+
 const CompanySection: React.FC<{ company: Company }> = ({ company }) => {
   // Placeholder component for company overview and reviews
   // You would implement the logic to fetch and display company data here

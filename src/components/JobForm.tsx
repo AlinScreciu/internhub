@@ -5,6 +5,7 @@ import TextareaInput from "./TextareaInput";
 import SelectInput from "./SelectInput";
 import ErrorSpan from "./ErrorSpan";
 import { api } from "~/utils/api";
+import CheckboxInput from "./CheckboxInput";
 export interface UserRegistrationFormData {
   position: string;
   location: string; // city
@@ -30,7 +31,7 @@ const JobForm: React.FC = () => {
     handleSubmit,
     register,
     watch,
-
+    setValue,
     formState: { errors },
   } = useForm<UserRegistrationFormData>({
     mode: "onChange",
@@ -50,14 +51,13 @@ const JobForm: React.FC = () => {
   const paid = watch("paid");
   const payStart = watch("payRangeStart");
   const payEnd = watch("payRangeEnd");
-
   const onSubmit: SubmitHandler<UserRegistrationFormData> = (data) => {
     console.log(data);
     postJobMutation.mutate(data);
   };
   return (
-    <div className="flex mt-5h-[calc(60vh)]  w-[75%] items-center justify-center">
-      <div className="w-full max-w-screen-lg overflow-auto  rounded-lg bg-white border px-12 p-6 shadow-lg">
+    <div className="mt-5h-[calc(60vh)] flex  w-[75%] items-center justify-center">
+      <div className="w-full max-w-screen-lg overflow-auto  rounded-lg border bg-white p-6 px-12 shadow-lg">
         <h1 className="mb-8 justify-center text-4xl font-bold text-primary">
           Add a job{" "}
         </h1>
@@ -74,10 +74,12 @@ const JobForm: React.FC = () => {
               )}
             </div>
             <div>
-              <Input 
+              <CheckboxInput
                 label="Full Time"
-                type="checkbox"
                 {...register("fullTime", { required })}
+                onChange={(e) => {
+                  setValue("fullTime", e.currentTarget.checked);
+                }}
               />
               {errors.fullTime && (
                 <ErrorSpan message={errors.fullTime.message} />
@@ -150,7 +152,11 @@ const JobForm: React.FC = () => {
               )}
             </div>
             <div className="w-4">
-              <Input label="Paid" type="checkbox" {...register("paid")} />
+              <CheckboxInput
+                label="Paid"
+                {...register("paid")}
+                onChange={(e) => setValue("paid", e.currentTarget.checked)}
+              />
               {errors.paid && <ErrorSpan message={errors.paid.message} />}
             </div>
           </div>
@@ -183,7 +189,6 @@ const JobForm: React.FC = () => {
                 <ErrorSpan message={errors.hireRate.message} />
               )}
             </div>
-            <span>(in euro)</span>
             {payStart && payEnd && payStart > payEnd && (
               <ErrorSpan message="Pay start cannot be more than pay end" />
             )}

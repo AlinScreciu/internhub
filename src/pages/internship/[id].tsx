@@ -17,14 +17,14 @@ const Internship = () => {
     return <>loading...</>;
   }
 
-  if (status === "unauthenticated" || !session) {
+  if (status === "unauthenticated" || !session?.user || !session) {
     return <>You need to login</>;
   }
   const isStudent = session.user.role === "student";
   const isEmployer = session.user.role === "employer";
   return (
     <div className=" w-screen bg-gray-50">
-      <Header id={session.user.id} search={false} />
+      <Header user={session.user} search={false} />
       {isStudent && <StudentInternship id={query.id} />}
       {isEmployer && <EmployerInternship id={query.id} />}
     </div>

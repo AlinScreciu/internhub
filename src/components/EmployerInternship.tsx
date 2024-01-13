@@ -12,15 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 type InternshipWithApplicants = Prisma.InternshipGetPayload<{
   include: { applicants: true };
 }>;
-import {
-  FaUser,
-  FaEnvelope,
-  FaUniversity,
-  FaBuilding,
-  FaCalendar,
-  FaUserTie,
-  FaFileAlt,
-} from "react-icons/fa";
+import { FaUser, FaEnvelope, FaUniversity } from "react-icons/fa";
 import Link from "next/link";
 
 function downloadFiles(applicants: User[]): void {
@@ -47,17 +39,23 @@ function downloadFiles(applicants: User[]): void {
         a.click();
         window.URL.revokeObjectURL(fileUrl);
         document.body.removeChild(a);
-        toast.success(`CV downloaded successfully for ${applicant.name}`);
+        toast.success(`CV downloaded successfully for ${applicant.name}`, {
+          position: "bottom-right",
+        });
       })
       .catch((error) => {
         console.error(`Error downloading CV for ${applicant.name}:`, error);
-        toast.error(`Failed to download CV for ${applicant.name}`);
+        toast.error(`Failed to download CV for ${applicant.name}`, {
+          position: "bottom-right",
+        });
       }),
   );
 
   const applicantsWithoutCV = applicants.filter((applicant) => !applicant.cv);
   applicantsWithoutCV.forEach((applicant) =>
-    toast.warn(`No CV available for ${applicant.name}`),
+    toast.warn(`No CV available for ${applicant.name}`, {
+      position: "bottom-right",
+    }),
   );
 
   Promise.all(downloadPromises)
@@ -72,15 +70,15 @@ const JobCard: React.FC<{ internship: InternshipWithApplicants }> = ({
   };
 
   return (
-    <div className="m-5 h-[75%] rounded-lg bg-white p-10 shadow-lg">
-      <div className="flex justify-end pb-4 text-gray-600">
-        Deadline: {new Date(internship.deadline).toLocaleDateString()}
-      </div>
-
-      <div className="mb-4 flex items-center">
+    <div className="m-5 h-fit rounded-lg bg-white p-10 shadow-lg">
+      <div className="flex items-center pb-4">
         <div className="flex-grow">
-          <div className="flex justify-center pb-3 text-xl font-bold">
+          <div className="flex justify-start pb-3 text-xl font-bold">
             {internship.position}
+          </div>
+          <div className="flex justify-start pb-4 text-gray-600">
+            Deadline:{" "}
+            {new Date(internship.deadline).toLocaleDateString("en-EN")}
           </div>
           <div className=" grid grid-cols-3 gap-2 ">
             <div className="flex flex-row items-center gap-2">
@@ -99,10 +97,7 @@ const JobCard: React.FC<{ internship: InternshipWithApplicants }> = ({
             </div>
             {internship.paid === true && (
               <div className="flex flex-row items-center gap-2">
-                <GiMoneyStack
-                  className=" h-5 w-5"
-                  style={{ color: "#94d479" }}
-                />
+                <GiMoneyStack className="h-5 w-5 text-primary" />
                 <span>Paid</span>
               </div>
             )}
@@ -117,14 +112,14 @@ const JobCard: React.FC<{ internship: InternshipWithApplicants }> = ({
             )}
             {internship.payRangeStart && internship.payRangeEnd && (
               <div className="text-gray-600">
-                {internship.payRangeStart} - {internship.payRangeEnd}
+                {internship.payRangeStart} - {internship.payRangeEnd}€
               </div>
             )}
-            <div className="flex flex-row items-center gap-2">
+            <div className="col-span-2 flex w-fit flex-row items-center gap-2 ">
               <FaRegUser className="h-5 w-5 text-primary " />
-              <div className="text-gray-600">
-                Positions: {internship.openPositions}
-              </div>
+              <span className="  text-gray-600">
+                Positions open: {internship.openPositions}
+              </span>
             </div>
           </div>
         </div>
@@ -150,43 +145,40 @@ const JobCard: React.FC<{ internship: InternshipWithApplicants }> = ({
     </div>
   );
 };
+function calculate_age(dob: Date): number {
+  const diff_ms = Date.now() - dob.getTime();
+  const age_dt = new Date(diff_ms);
+
+  return Math.abs(age_dt.getUTCFullYear() - 1970);
+}
 const UserCard: React.FC<{ user: User }> = ({ user }) => (
-  <div className="max-w-md rounded-md bg-white p-6 shadow-md">
-    <div className="mb-4 flex items-center">
-      <FaUser className="mr-4 text-5xl text-blue-500" />
+  <div className=" h-full max-w-md rounded-md bg-white p-6 shadow-md">
+    <div className="flex items-center pb-2">
+      <FaUser className="pr-4 text-4xl text-primary" />
       <div>
-        <div className="mb-1 text-xl font-semibold">{user.name ?? "N/A"}</div>
-        <div className="flex items-center">
-          <FaEnvelope className="mr-2 text-lg text-gray-500" />
-          <div className="text-gray-600">{user.email ?? "N/A"}</div>
+        <div className="pb-1 text-xl font-semibold">
+          {user.name ?? "N/A"}, {user.dob ? calculate_age(user.dob) : "N/A"}
         </div>
       </div>
     </div>
-    <div className="my-4 border-t border-gray-300" />
-    <div className="mb-4">
+    <div className="border-t border-gray-300 py-2" />
+    <div className="pb-2">
       <div className="flex items-center">
-        <FaUniversity className="mr-2 text-lg text-gray-500" />
-        <div className="text-gray-600">{user.university ?? "N/A"}</div>
-      </div>
-      <div className="mt-2 flex items-center">
-        <FaBuilding className="mr-2 text-lg text-gray-500" />
-        <div className="text-gray-600">{user.faculty ?? "N/A"}</div>
-      </div>
-      <div className="mt-2 flex items-center">
-        <FaUserTie className="mr-2 text-lg text-gray-500" />
-        <div className="text-gray-600">{user.role ?? "N/A"}</div>
-      </div>
-      <div className="mt-2 flex items-center">
-        <FaCalendar className="mr-2 text-lg text-gray-500" />
-        <div className="text-gray-600">
-          {user.dob ? new Date(user.dob).toLocaleDateString() : "N/A"}
+        <FaUniversity className="text-lg text-gray-500" />
+        <div className="pl-2 text-gray-600">
+          {user.university ?? "N/A"} - {user.faculty ?? "N/A"}
         </div>
       </div>
+      <div className="flex items-center">
+        <FaEnvelope className=" text-lg text-gray-500" />
+        <Link href={`mailto:${user.email}`} className="pl-2 text-gray-600">
+          {user.email ?? "N/A"}
+        </Link>
+      </div>
     </div>
-    <div className="my-4 border-t border-gray-300" />
+    <div className="border-t border-gray-300 py-1" />
     <div className="flex items-center">
-      <FaFileAlt className="mr-2 text-lg text-gray-500" />
-      <div className="line-clamp-3 text-gray-600">
+      <div className="line-clamp-3 pl-2 text-gray-600">
         {user.description ?? "N/A"}
       </div>
     </div>
@@ -200,8 +192,13 @@ const Applicants: React.FC<{ applicants: User[] }> = ({ applicants }) => {
   return (
     <div className="p-5">
       <div className="mb-4 text-lg font-bold">
-        <div>Applicants</div>
-        <div>
+        <div className="pb-2 text-3xl">Applicants</div>
+        <div
+          className="grid grid-cols-2 justify-center gap-4 p-5 "
+          style={{
+            gridAutoRows: "1fr",
+          }}
+        >
           {applicants.map((user) => (
             <Link key={user.id} href={`/profile/${user.id}`}>
               <UserCard user={user} />

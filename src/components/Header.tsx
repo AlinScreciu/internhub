@@ -2,8 +2,15 @@ import React from "react";
 import { FaHome, FaUserCircle } from "react-icons/fa";
 import Search from "./Search";
 import Link from "next/link";
+import { type User } from "next-auth";
 
-const Header: React.FC<{ search: boolean; id: string }> = ({ search, id }) => {
+const Header: React.FC<{ search: boolean; user: User }> = ({
+  search,
+  user,
+}) => {
+  console.log("🚀 ~ user:", user);
+
+  const isStudent = user?.role === "student";
   return (
     <div className="bg-secondary flex h-20 w-screen items-center justify-between px-4">
       <Link href={"/"}>
@@ -14,7 +21,9 @@ const Header: React.FC<{ search: boolean; id: string }> = ({ search, id }) => {
           <Search />
         </div>
       )}
-      <Link href={`/profile/${id}`}>
+      <Link
+        href={isStudent ? `/profile/${user.id}` : `/company/${user.company_id}`}
+      >
         <FaUserCircle className="text-3xl text-primary" />
       </Link>
     </div>

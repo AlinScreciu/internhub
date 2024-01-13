@@ -65,10 +65,10 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
               </div>
             </div>
             <div className="flex flex-col gap-4 ">
-              <div className="flex justify-center text-[18px] text-gray-900">
+              <div className="flex justify-center  text-[18px] text-gray-900">
                 Description:
               </div>
-              <div className="mb-3 flex max-h-[200px] justify-center overflow-auto text-gray-800">
+              <div className="mb-3 flex max-h-[calc(55vh)] justify-center overflow-y-auto   text-gray-800">
                 {user.description ?? "No description provided"}
               </div>
             </div>
@@ -123,7 +123,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ user, own }) => {
         {addExperience ? (
           <ExperienceForm setAdd={setAddExperience} />
         ) : (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 justify-center gap-4">
             {experiencesQuery.data?.map((experience) => (
               <ExperienceCard
                 key={experience.id}

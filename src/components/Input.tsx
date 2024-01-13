@@ -4,6 +4,7 @@ interface InputProps {
   name: string;
   value?: string;
   defaultValue?: string;
+  checked?: boolean;
   autoComplete?: string;
   placeholder?: string;
   min?: number | string;
@@ -27,7 +28,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
         <input
           id={props.name}
-          className="text- xl block w-full appearance-none rounded-md border border-gray-300 px-3 py-2  text-inherit placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 "
+          className="text- xl block w-fit appearance-none rounded-md border border-gray-300 px-3 py-2  text-inherit placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 "
           {...props}
           ref={ref}
         />
