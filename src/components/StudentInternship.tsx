@@ -1,14 +1,15 @@
-import React, { useLayoutEffect, useRef } from "react";
+import React from "react";
 import { api } from "~/utils/api";
 import ErrorSpan from "./ErrorSpan";
-import type { Company, Internship, Review } from "@prisma/client";
-import AddReviewForm from "./AddReview";
-import { Star } from "./StarsRating";
+import type { Company, Internship } from "@prisma/client";
 import { IoLocationOutline } from "react-icons/io5";
 import { GiMoneyStack } from "react-icons/gi";
 import { FaBusinessTime } from "react-icons/fa";
 import { MdLocationCity } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
+import Reviews from "./Reviews";
+import AddReviewModal from "./AddReviewModal";
+import Link from "next/link";
 
 const JobCard: React.FC<{ internship: Internship }> = ({ internship }) => {
   const utils = api.useUtils();
@@ -110,87 +111,17 @@ const CompanySection: React.FC<{ company: Company }> = ({ company }) => {
     <div className="p-5">
       <div className="mb-4 text-lg font-bold">Company overview</div>
       {/* Placeholder for company information */}
+      <Link href={`/company/${company.id}`} target="_blank">
+        {" "}
+        Go to company page
+      </Link>
       <div className="mb-6">[Company information here]</div>
       <div className="mb-4 text-lg font-bold">Company reviews</div>
-      {/* Placeholder for company reviews */}
       <div className="mb-6">
-        <Reviews company={company} />
+        <Reviews companyId={company.id} />
       </div>
-    </div>
-  );
-};
-
-const ReviewCard: React.FC<{ review: Review }> = ({ review }) => {
-  return (
-    <div className="rounded-md bg-white p-2 shadow-md">
-      <div className="mb-2 text-lg font-semibold">{review.title}</div>
-      <div className="mb-2 text-gray-600">{review.description}</div>
-      <div className="mb-2 flex items-center">
-        <div className="text-gray-500">{review.position}</div>
-      </div>
-      <div className="mb-2 text-gray-500">
-        {`${review.startDate.toDateString()} ${
-          review.endDate ? `- ${review.endDate.toDateString()}` : ""
-        }`}
-      </div>
-      <div className="flex items-center">
-        <div id="stars" className="flex gap-2">
-          {[1, 2, 3, 4, 5].map((v, i) => (
-            <Star key={i} filled={v <= review.stars} />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const Reviews: React.FC<{ company: Company }> = ({ company }) => {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const [showModal, setShowModal] = React.useState(false);
-
-  useLayoutEffect(() => {
-    if (!dialogRef.current) return;
-    if (showModal) {
-      dialogRef.current.showModal();
-      return;
-    }
-    dialogRef.current.close();
-  }, [showModal]);
-
-  const reviewsQuery = api.review.getAllReviewFromCompany.useQuery({
-    companyId: company.id,
-  });
-  if (reviewsQuery.isLoading) {
-    return <>loading...</>;
-  }
-
-  if (reviewsQuery.isError) {
-    return <ErrorSpan message={reviewsQuery.error.message} />;
-  }
-  const reviews = reviewsQuery.data;
-
-  const handleDialogOnClick = () => {
-    setShowModal(!showModal);
-  };
-  return (
-    <div className="flex flex-col">
-      <div>Company here</div>
-      <div className="flex w-fit gap-2">
-        {reviews.map((review) => (
-          <ReviewCard key={review.id} review={review} />
-        ))}
-      </div>
-      <div>
-        <button
-          type="button"
-          className="rounded-full bg-primary px-6 py-2 font-bold text-white"
-          onClick={handleDialogOnClick}
-        >
-          Add review
-        </button>
-        <dialog onClose={() => setShowModal(false)} ref={dialogRef}>
-          <AddReviewForm companyId={company.id} setShowModal={setShowModal} />
-        </dialog>
+      <div className="mb-6 flex flex-col">
+        <AddReviewModal companyId={company.id} />
       </div>
     </div>
   );
