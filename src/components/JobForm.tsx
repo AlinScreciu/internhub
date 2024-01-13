@@ -56,9 +56,9 @@ const JobForm: React.FC = () => {
     postJobMutation.mutate(data);
   };
   return (
-    <div className="flex min-h-[calc(100vh-5rem)] w-max items-center justify-center bg-gray-100">
-      <div className="w-full max-w-screen-lg rounded-md bg-white px-6 py-4 shadow-md">
-        <h1 className="mb-8 justify-center text-3xl font-bold text-red-800">
+    <div className="flex mt-5h-[calc(60vh)]  w-[75%] items-center justify-center">
+      <div className="w-full max-w-screen-lg overflow-auto  rounded-lg bg-white border px-12 p-6 shadow-lg">
+        <h1 className="mb-8 justify-center text-4xl font-bold text-primary">
           Add a job{" "}
         </h1>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -74,7 +74,7 @@ const JobForm: React.FC = () => {
               )}
             </div>
             <div>
-              <Input
+              <Input 
                 label="Full Time"
                 type="checkbox"
                 {...register("fullTime", { required })}
@@ -230,7 +230,7 @@ const JobForm: React.FC = () => {
 
           <div className="flex items-center justify-center">
             <button
-              className="focus:shadow-outline rounded bg-gray-800 px-4 py-2 font-bold text-white hover:bg-gray-700 focus:outline-none"
+              className="focus:shadow-outline rounded bg-blue-700 px-4 py-2 font-bold text-white hover:bg-gray-700 focus:outline-none"
               type="submit"
             >
               Submit

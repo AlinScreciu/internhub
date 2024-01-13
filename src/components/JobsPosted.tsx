@@ -20,10 +20,10 @@ const InternshipCard: React.FC<InternshipCardProps> = ({ internship }) => {
 
   return (
     <Link href={`/internship/${internship.id}`}>
-      <div className="max-w-sm overflow-hidden rounded bg-green-200 p-4 shadow-lg">
+      <div className="max-w-sm overflow-hidden rounded-lg bg-white p-4 shadow-lg border mt-6 ">
         <div className="flex items-center space-x-4">
           <div className="flex-shrink-0">
-            <div className="rounded-full bg-purple-600 p-2">
+            <div className="rounded-full bg-primary p-2">
               <FiLock className="h-8 w-8 text-white" />
             </div>
           </div>
@@ -56,7 +56,7 @@ const JobsPosted = () => {
   }
   const internships = jobsQuery.data;
   return (
-    <div>
+    <div className="h-[95%]  flex flex-col gap-4 justify-center overflow-auto">
       {internships.map((internship) => (
         <InternshipCard key={internship.id} internship={internship} />
       ))}
