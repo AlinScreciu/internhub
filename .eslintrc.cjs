@@ -13,8 +13,8 @@ const config = {
   rules: {
     // These opinionated rules are enabled in stylistic-type-checked above.
     // Feel free to reconfigure them to your own preference.
-    "@typescript-eslint/array-type": "off",
-    "@typescript-eslint/consistent-type-definitions": "off",
+    "@typescript-eslint/array-type": "warn",
+    "@typescript-eslint/consistent-type-definitions": "warn",
 
     "@typescript-eslint/consistent-type-imports": [
       "warn",
@@ -24,7 +24,7 @@ const config = {
       },
     ],
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
-    "@typescript-eslint/require-await": "off",
+    "@typescript-eslint/require-await": "warn",
     "@typescript-eslint/no-misused-promises": [
       "error",
       {

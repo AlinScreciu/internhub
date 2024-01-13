@@ -3,11 +3,9 @@ import { FaHome, FaUserCircle } from "react-icons/fa";
 import Search from "./Search";
 import Link from "next/link";
 
-const Header: React.FC<{ search: boolean, id: string }> = ({ search, id }) => {
-
+const Header: React.FC<{ search: boolean; id: string }> = ({ search, id }) => {
   return (
-    
-    <div className="flex h-20 w-screen items-center justify-between bg-slate-900">
+    <div className="flex h-20 items-center justify-between bg-slate-900">
       <Link href={"/"}>
         <FaHome className="ml-4 text-3xl text-primary" />
       </Link>
