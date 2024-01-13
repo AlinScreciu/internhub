@@ -15,7 +15,7 @@ type InternshipWithCompany = Prisma.InternshipGetPayload<{
 }>;
 const JobCard: React.FC<{ job: InternshipWithCompany }> = ({ job }) => {
   return (
-    <div className="flex gap-3 bg-white rounded-lg shadow-sm border-[2px] border-primary shadow-primary items-center p-4">
+    <div className="flex gap-3 bg-white rounded-lg shadow-sm border-[2px] border-primary shadow-primary p-4">
     <TbBriefcase className="p-1 text-3xl w-12 h-12" style={{ color: "#94d479" }} />
     <div className="flex flex-col w-full">
       <div className="font-bold text-2xl" style={{ color: "#333" }}>{job.position}</div>

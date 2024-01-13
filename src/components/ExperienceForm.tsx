@@ -38,9 +38,8 @@ const ExperienceForm: React.FC<{
   return (
     <div className="flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md rounded-lg bg-white px-8 py-6 shadow-lg">
-        <h1 className="mb-6 text-center text-2xl font-bold text-indigo-600">
-          Add Experience
-        </h1>
+        <h1 className="mb-6 text-2xl font-bold text-center text-primary">Add Experience</h1>
+
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="space-y-4">
             <Input
