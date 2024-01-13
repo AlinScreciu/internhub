@@ -113,8 +113,8 @@ model Company {
     headquarters String
     employees    Int
     domain       String
-
-    reviews Review[]
+    website      String       @default("")
+    reviews      Review[]
 }
 
 model Review {

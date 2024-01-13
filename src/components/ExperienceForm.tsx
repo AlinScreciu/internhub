@@ -38,7 +38,9 @@ const ExperienceForm: React.FC<{
   return (
     <div className="flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md rounded-lg bg-white px-8 py-6 shadow-lg">
-        <h1 className="mb-6 text-2xl font-bold text-center text-primary">Add Experience</h1>
+        <h1 className="text-secondary mb-6 text-center text-2xl font-bold">
+          Add Experience
+        </h1>
 
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="space-y-4">
@@ -90,7 +92,7 @@ const ExperienceForm: React.FC<{
 
           <div className="mt-6 flex justify-center">
             <button
-              className="w-full rounded-lg bg-indigo-600 px-4 py-3 font-medium text-white hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-opacity-50"
+              className="hover:bg-secondary w-full rounded-lg bg-primary px-4 py-3 font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-opacity-50"
               type="submit"
             >
               Submit

@@ -29,6 +29,7 @@ const Register: React.FC = () => {
   const employerRegistrationMutation = api.user.registerAsEmployer.useMutation({
     onSuccess: async () => {
       await router.push("/");
+      await update();
     },
   });
   const handleCompanyFormSubmit: SubmitHandler<EmployerRegistrationFormData> = (

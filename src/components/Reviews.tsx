@@ -41,7 +41,7 @@ const Reviews: React.FC<{ companyId: string }> = ({ companyId }) => {
   const reviews = reviewsQuery.data;
 
   return (
-    <div className="grid w-fit grid-cols-2 gap-4">
+    <div className="grid w-fit grid-cols-2 gap-4 overflow-y-auto p-2">
       {reviews.map((review) => (
         <ReviewCard key={review.id} review={review} />
       ))}
