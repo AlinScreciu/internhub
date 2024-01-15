@@ -12,7 +12,7 @@ export const experienceRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return ctx.db.experience.findUnique({ where: input });
     }),
-   deleteById: protectedProcedure
+  deleteById: protectedProcedure
     .input(
       z.object({
         id: z.string(),
@@ -31,18 +31,17 @@ export const experienceRouter = createTRPCRouter({
         position: z.string(),
         description: z.string(),
         startDate: z.date(),
-        endDate: z.date(),
+        endDate: z.date().nullable(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       const id = ctx.session.user.id;
       const experience = await ctx.db.experience.create({
         data: {
-            ... input,
-            userId: id,
-        }
+          ...input,
+          userId: id,
+        },
       });
       return experience;
     }),
-
 });

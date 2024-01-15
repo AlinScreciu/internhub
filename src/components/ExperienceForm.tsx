@@ -9,7 +9,7 @@ interface ExperienceFormData {
   company: string;
   position: string;
   startDate: Date;
-  endDate: Date;
+  endDate: Date | null;
   description: string;
 }
 
@@ -19,6 +19,7 @@ const ExperienceForm: React.FC<{
   const {
     handleSubmit,
     register,
+    watch,
     formState: { errors },
   } = useForm<ExperienceFormData>({
     mode: "onChange",
@@ -34,11 +35,12 @@ const ExperienceForm: React.FC<{
   const onSubmit: SubmitHandler<ExperienceFormData> = (data) => {
     createExperience.mutate(data);
   };
-
+  const start = watch("startDate");
+  const end = watch("endDate");
   return (
     <div className="flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md rounded-lg bg-white px-8 py-6 shadow-lg">
-        <h1 className="text-secondary mb-6 text-center text-2xl font-bold">
+        <h1 className="mb-6 text-center text-2xl font-bold text-secondary">
           Add Experience
         </h1>
 
@@ -63,6 +65,12 @@ const ExperienceForm: React.FC<{
               {...register("startDate", {
                 required: "Start date is required",
                 valueAsDate: true,
+                validate: (_) => {
+                  const now = new Date();
+                  if (start >= now) return "Start date cannot be in the future";
+                  if (end && start >= end)
+                    return "Start date cannot be after end date";
+                },
               })}
             />
             {errors.startDate && (
@@ -73,8 +81,14 @@ const ExperienceForm: React.FC<{
               label="End Date"
               type="date"
               {...register("endDate", {
-                required: "End date is required",
                 valueAsDate: true,
+                validate: (_) => {
+                  if (!end) return;
+                  const now = new Date();
+                  if (end >= now) return "End date cannot be in the future";
+                  if (start >= end)
+                    return "Start date cannot be after end date";
+                },
               })}
             />
             {errors.endDate && <ErrorSpan message={errors.endDate.message} />}
@@ -92,7 +106,7 @@ const ExperienceForm: React.FC<{
 
           <div className="mt-6 flex justify-center">
             <button
-              className="hover:bg-secondary w-full rounded-lg bg-primary px-4 py-3 font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-opacity-50"
+              className="w-full rounded-lg bg-primary px-4 py-3 font-medium text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-opacity-50"
               type="submit"
             >
               Submit

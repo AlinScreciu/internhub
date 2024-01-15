@@ -23,7 +23,7 @@ const Internship = () => {
   const isStudent = session.user.role === "student";
   const isEmployer = session.user.role === "employer";
   return (
-    <div className=" w-screen bg-gray-50">
+    <div className="w-screen bg-gray-100">
       <Header user={session.user} search={false} />
       {isStudent && <StudentInternship id={query.id} />}
       {isEmployer && <EmployerInternship id={query.id} />}

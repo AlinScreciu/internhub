@@ -225,7 +225,7 @@ const EmployerInternship: React.FC<{ id: string }> = (query) => {
   }
   const internship = internshipQuery.data;
   return (
-    <div className="flex h-full divide-x divide-gray-300">
+    <div className="flex h-[calc(100vh-5rem)] divide-x divide-gray-300">
       <div className="w-2/5 p-4">
         <JobCard internship={internship} />
       </div>
