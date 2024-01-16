@@ -22,7 +22,11 @@ export const experienceRouter = createTRPCRouter({
       return ctx.db.experience.delete({ where: input });
     }),
   getAll: protectedProcedure.query(async ({ ctx }) => {
-    return ctx.db.experience.findMany();
+    return ctx.db.experience.findMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
   }),
   create: protectedProcedure
     .input(
