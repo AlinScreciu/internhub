@@ -53,7 +53,7 @@ const JobCard: React.FC<{ job: InternshipWithCompany }> = ({ job }) => {
             <div className="flex items-center gap-1">
               <GrMoney className=" h-5 w-5" style={{ color: "#94d479" }} />
               <span>
-                {job.payRangeStart} - {job.payRangeEnd}
+                {job.payRangeStart} - {job.payRangeEnd} €
               </span>
             </div>
           )}
