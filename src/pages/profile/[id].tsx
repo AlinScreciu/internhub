@@ -55,7 +55,7 @@ const ProfilePage = () => {
 export const getServerSideProps = (async ({ req, res, query }) => {
   const { id } = query as ExtendedQuery;
   const session = await getServerAuthSession({ req, res });
-  if (!session?.user || !session.user.company_id) {
+  if (!session?.user) {
     return {
       redirect: {
         destination: "/register",
@@ -63,13 +63,14 @@ export const getServerSideProps = (async ({ req, res, query }) => {
       },
     };
   }
-  if (session.user.role === "employer" && session.user.id === id)
+  if (session.user.role === "employer" && session.user.id === id) {
     return {
       redirect: {
         destination: `/company/${session.user.company_id}`,
         permanent: true,
       },
     };
+  }
   return { props: {} };
 }) satisfies GetServerSideProps;
 export default ProfilePage;
