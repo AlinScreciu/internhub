@@ -66,11 +66,11 @@ const JobCard: React.FC<{ internship: Internship }> = ({ internship }) => {
               </div>
             )}
             {internship.payRangeStart && internship.payRangeEnd && (
-              <div className="text-gray-600">
-                {internship.payRangeStart} - {internship.payRangeEnd}
+              <div className="flex items-center text-gray-600">
+                {internship.payRangeStart} - {internship.payRangeEnd} €
               </div>
             )}
-            <div className="col-span-2 flex w-fit flex-row items-center gap-2 ">
+            <div className="col-span-1 flex w-fit flex-row items-center gap-2 ">
               <FaRegUser className="h-5 w-5 text-primary " />
               <span className="  text-gray-600">
                 Positions open: {internship.openPositions}

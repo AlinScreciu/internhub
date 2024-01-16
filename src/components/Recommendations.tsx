@@ -83,7 +83,7 @@ const Recommendations = () => {
   const jobs = jobsQuery.data;
 
   return (
-    <div className="grid grid-cols-2 gap-4 p-5">
+    <div className="grid grid-cols-2 gap-4  p-5">
       {jobs.map((job) => (
         <Link key={job.id} href={`/internship/${job.id}`} target="_blank">
           <JobCard job={job} />

@@ -27,7 +27,11 @@ const AddReviewModal: React.FC<{ companyId: string }> = ({ companyId }) => {
       >
         Add review
       </button>
-      <dialog onClose={() => setShowModal(false)} ref={dialogRef}>
+      <dialog
+        className="overflow-hidden rounded-2xl "
+        onClose={() => setShowModal(false)}
+        ref={dialogRef}
+      >
         <AddReviewForm companyId={companyId} setShowModal={setShowModal} />
       </dialog>
     </div>

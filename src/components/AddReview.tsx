@@ -41,7 +41,7 @@ const AddReviewForm: React.FC<{
     addReviewMutation.mutate({ ...data, companyId });
   };
   return (
-    <div className="flex items-center justify-center bg-gray-100">
+    <div className="flex items-center justify-center  rounded-xl bg-gray-100 p-10">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col items-center justify-center">
           <div className="grid grid-cols-2 gap-2 p-2">
@@ -76,7 +76,7 @@ const AddReviewForm: React.FC<{
           <div className="p-4">
             <StarsRating onChange={(rating) => setValue("stars", rating)} />
           </div>
-          <div className="grid grid-cols-2 gap-2 p-2">
+          <div className="grid grid-cols-2 gap-2 p-2 pb-5">
             <div>
               <Input
                 type="date"
@@ -116,7 +116,7 @@ const AddReviewForm: React.FC<{
             </div>
           </div>
           <button
-            className="focus:shadow-outline rounded bg-gray-800 px-4 py-2 font-bold text-white hover:bg-gray-700 focus:outline-none"
+            className="focus:shadow-outline rounded bg-primary px-4 py-2 font-bold text-white hover:bg-darker focus:outline-none"
             type="submit"
           >
             Submit
